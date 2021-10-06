@@ -31,6 +31,7 @@ function spawnBubble() {
     dx: 0,
     dy: -3,
     theColor: color(random(255), random(255), random(255), random(255)),
+    theTime: random(1000),
   };
   theBubbles.push(bubble);
 }
@@ -40,14 +41,17 @@ function bubbleUp() {
     bubble.y += bubble.dy;
 
     //jitter sideways 
-    bubble.x += random(-5, 5);
+    // bubble.x += random(-5, 5);
+
+    bubble.x = noise(bubble.theTime) * width;
+    bubble.theTime += 0.005;
   }
 }
 
 function displayBubble() {
   for (let bubble of theBubbles) {
     noStroke();
-    fill(bubble.theColor)
+    fill(bubble.theColor);
     circle(bubble.x, bubble.y, bubble.radius*2);
   }
 }
