@@ -3,9 +3,16 @@
 // Date
 //
 // Extra for Experts:
+
 // - describe what you did to take this project "above and beyond"
 let gridSize = 30;
 let grid;
+let ding;
+
+function preload() {
+  soundFormats("ogg");
+  ding = loadSound("assets/ding.mp3");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight); 
@@ -26,10 +33,20 @@ function mousePressed(){
 
   if (grid[cellY][cellX] === 1) {
     grid[cellY][cellX] = 0;
+    grid[cellY + 1][cellX] = 0;
+    grid[cellY - 1][cellX] = 0;
+    grid[cellY][cellX + 1] = 0;
+    grid[cellY][cellX - 1] = 0;
   }
-  else if (grid[cellY][cellX]) {
+  else if (grid[cellY][cellX] === 0) {
     grid[cellY][cellX] = 1;
+    grid[cellY + 1][cellX] = 1;
+    grid[cellY - 1][cellX] = 1;
+    grid[cellY][cellX + 1] = 1;
+    grid[cellY][cellX - 1] = 1;
   }
+
+  ding.play();
 }
 
 function displayGrid(){
@@ -74,4 +91,15 @@ function createRandom2DArray(rows, cols) {
     }
   }
   return grid;
+}
+function keyPressed() {
+  if (keyCode === 69) {
+    for (let y = 0; y<gridSize; y++) {
+      for (let x=0; x<gridSize; x++){
+        if (grid[y][x] === 0) {
+          fill ("white");
+        }
+      }
+    }
+  }
 }
