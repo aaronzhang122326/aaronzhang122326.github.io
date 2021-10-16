@@ -1,53 +1,54 @@
-// First Demo
+// Practice 
 // Your Name
 // Date
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-<<<<<<< HEAD
-let rectHeights = [];
-let numOfRects;
-let x = 1;
-let y;
-
-
+let gridSize = 10
+let grid = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  numOfRects = width;
-  setTerrain();
-=======
-
-function setup() {
-  createCanvas(windowWidth, windowHeight);
->>>>>>> b7ad8dd21d1a06a4463e4c01ffce43817bfa3962
+  create2DArray();
 }
 
 function draw() {
   background(220);
-<<<<<<< HEAD
-  displayTerrain();
-  fill("black");
-  rect(100,100,100,100);
+  display();
+
+  // createEmptyArray();
+  
 }
 
-function displayTerrain() {
-  for (let i = 0; i < numOfRects; i++) {
-    fill("black");
-    rect(x * i, height, 10, -rectHeights[i]);
+function createEmptyArray() {
+  grid = [];
+}
+
+function display() {
+  for (let x = 0; x < gridSize; x++) {
+    for (let y = 0; y < gridSize; y++) {
+      if (grid[x][y] === 0) {
+        fill("white");
+      }
+      else {
+        fill("black");
+      }
+      rect(x * width/gridSize, y * height/gridSize, width/gridSize, height/gridSize);
+    }
   }
 }
 
-function setTerrain(){
-  let time = 0;
-  for (let i = 0; i <= numOfRects; i++) {
-    rectHeights.push(noise(time) * height);
-    time += 0.002;
+function create2DArray() {
+  for (let x = 0; x < gridSize; x++) {
+    grid.push([]);
+    for (let y = 0; y < gridSize; y++) {
+      if (random(0, 100) <= 50) {
+        grid[x].push(0);
+      }
+      else {
+        grid[x].push(1);
+      }
+    }
   }
 }
-=======
-
-  rect(mouseX, mouseY, 100, 50);
-}
->>>>>>> b7ad8dd21d1a06a4463e4c01ffce43817bfa3962
