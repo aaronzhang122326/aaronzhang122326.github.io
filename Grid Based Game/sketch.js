@@ -54,7 +54,7 @@ function generateBlock() {
   let rowTwoLength = random(0,3);
 
   let rowOnePosition = round(random(1, gridSize-rowOneLength));
-  let rowTwoPosition = round(random(rowOnePosition, rowOnePosition + rowOneLength));
+  let rowTwoPosition = round(random(rowOnePosition, rowOnePosition + rowOneLength -1));
 
   for (let x = 0; x < rowOneLength; x++) {
     grid[x + rowOnePosition-1][0] = 1;
@@ -66,4 +66,8 @@ function generateBlock() {
 }
 function mousePressed() {
   generateBlock();
+}
+
+function moveDown() {
+  grid
 }
