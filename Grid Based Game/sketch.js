@@ -6,7 +6,8 @@
 // - describe what you did to take this project "above and beyond"
 
 let number = 0;
-let grid  = [];
+let grid;
+let newGrid = [];
 let gridSize = 10;
 let gridSide;
 
@@ -24,22 +25,22 @@ function draw() {
   // rect(mouseX, mouseY, 100, 50);
 }
 function create2DArray() {
-  for (let x = 0; x < gridSize; x++) {
-    grid.push([]);
-    for (let y = 0; y < gridSize; y++) {
-      grid[x].push(0);
+  for (let y = 0; y < gridSize; y++) {
+    newGrid.push([]);
+    for (let x = 0; x < gridSize; x++) {
+      newGrid[y].push(0);
     }
   }
 }
 
 function displayGrid() {
-  for (let x = 0; x < gridSize; x++) {
-    for (let y = 0; y < gridSize; y++) {
-      if (grid[x][y] === 0) {
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      if (newGrid[y][x] === 0) {
         fill("white");
       }
 
-      else if (grid[x][y] === 1) {
+      else if (newGrid[y][x] === 1) {
         fill("black");
       }
 
@@ -57,17 +58,30 @@ function generateBlock() {
   let rowTwoPosition = round(random(rowOnePosition, rowOnePosition + rowOneLength -1));
 
   for (let x = 0; x < rowOneLength; x++) {
-    grid[x + rowOnePosition-1][0] = 1;
+    newGrid[0][x + rowOnePosition-1] = 1;
   }
 
   for (let x = 0; x < rowTwoLength; x++) {
-    grid[x + rowTwoPosition-1][1] = 1;
+    newGrid[1][x + rowTwoPosition-1] = 1;
   }
-}
-function mousePressed() {
-  generateBlock();
 }
 
 function moveDown() {
-  grid
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length; x++) {
+      if (grid[y][x] === 1) {
+        newGrid[y+1][x] = 1;
+        newGrid[y][x] = 0;
+      }
+    }
+  }
+  grid = newGrid;
+}
+
+function mousePressed() {
+  console.log("1");
+  generateBlock();
+  console.log("2");
+  moveDown();
+  console.log("3");
 }
