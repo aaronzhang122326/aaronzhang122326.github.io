@@ -7,16 +7,19 @@
 
 let number = 0;
 let grid;
-let newGrid = [];
-let gridSize = 10;
+let newGrid;
+let gridHeight = 20;
+let gridWidth = 10;
 let gridSide;
 
 function setup() {
+
   createCanvas(windowWidth, windowHeight);
+
+  grid = create2DArray();
+  gridSide = height/gridHeight;
   
-  gridSide = height/10;
-  
-  create2DArray();
+  //create2DArray();
 }
 
 function draw() {
@@ -25,26 +28,28 @@ function draw() {
   // rect(mouseX, mouseY, 100, 50);
 }
 function create2DArray() {
-  for (let y = 0; y < gridSize; y++) {
-    newGrid.push([]);
-    for (let x = 0; x < gridSize; x++) {
-      newGrid[y].push(0);
+  let screen = [];
+  for (let y = 0; y < gridHeight; y++) {
+    screen.push([]);
+    for (let x = 0; x < gridWidth; x++) {
+      screen[y].push(0);
     }
   }
+  return screen;
 }
 
 function displayGrid() {
-  for (let y = 0; y < gridSize; y++) {
-    for (let x = 0; x < gridSize; x++) {
-      if (newGrid[y][x] === 0) {
+  for (let y = 0; y < gridHeight; y++) {
+    for (let x = 0; x < gridWidth; x++) {
+      if (grid[y][x] === 0) {
         fill("white");
       }
 
-      else if (newGrid[y][x] === 1) {
+      else if (grid[y][x] === 1) {
         fill("black");
       }
 
-      rect(x * gridSide, y * gridSide, gridSide, gridSide);
+      rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
     }
   }
 }
@@ -54,15 +59,15 @@ function generateBlock() {
   let rowOneLength = random(0,3);
   let rowTwoLength = random(0,3);
 
-  let rowOnePosition = round(random(1, gridSize-rowOneLength));
+  let rowOnePosition = round(random(1, gridWidth-rowOneLength));
   let rowTwoPosition = round(random(rowOnePosition, rowOnePosition + rowOneLength -1));
 
   for (let x = 0; x < rowOneLength; x++) {
-    newGrid[0][x + rowOnePosition-1] = 1;
+    grid[0][x + rowOnePosition-1] = 1;
   }
 
   for (let x = 0; x < rowTwoLength; x++) {
-    newGrid[1][x + rowTwoPosition-1] = 1;
+    grid[1][x + rowTwoPosition-1] = 1;
   }
 }
 
@@ -79,9 +84,7 @@ function moveDown() {
 }
 
 function mousePressed() {
-  console.log("1");
+  newGrid = grid;
   generateBlock();
-  console.log("2");
   moveDown();
-  console.log("3");
 }
