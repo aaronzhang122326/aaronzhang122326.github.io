@@ -70,7 +70,9 @@ function draw() {
   background(220);
   displayGrid();
   moveDown();
-  console.log(frameCount % 20 === 0);
+  if (start === true){
+    console.log(positionY + blockList[blockListZ].length);
+  }
 }
 function create2DArray() {
   let screen = [];
@@ -99,31 +101,6 @@ function displayGrid() {
   }
 }
 
-// function generateBlock() {
-  
-//   let rowOneLength = random(0,3);
-//   let rowTwoLength = random(0,3);
-
-
-//   // blockList = [];
-//   let blockListX = 0;
-
-//   blockListZ += 1;
-//   blockList.push([]);
-//   blockList[blockListZ].push([],[]);
-
-//   for (let x = 0; x < rowOneLength; x++) {
-//     blockList[blockListZ][blockListY].push(1);
-//     blockListY += 1;
-//     // grid[0][x + rowOnePosition-1] = 1;
-//   }
-
-//   for (let x = 0; x < rowTwoLength; x++) {
-//     blockList[blockListZ][blockListY].push(1);
-//     // grid[1][x + rowTwoPosition-1] = 1;
-//   }
-// }
-
 function generateBlock() {
   blockList.push(random(blockChoices));
   blockListZ += 1;
@@ -133,18 +110,11 @@ function generateBlock() {
   start = true;
 }
 
-// function displayBlocks() { 
-//   let rowOnePosition = round(random(1, gridWidth-rowOneLength));
-//   let rowTwoPosition = round(random(rowOnePosition, rowOnePosition + rowOneLength -1));
-  
-  
-//     }
-//   }
-// }&& blockList[blockListZ][], blockList[blockListZ][0].length
-
 function moveDown() {
-  if (start === true) {
-    if (frameCount % 20 === 0 && positionY + blockList[blockListZ].length <= gridHeight) {   
+
+
+  if (start === true) {    
+    if (frameCount % 10 === 0 && positionY + blockList[blockListZ].length <= gridHeight) {   
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
@@ -157,11 +127,55 @@ function moveDown() {
       positionY += 1;
     }
   }
-
-  else {
-    start = false;
+  
+  if (start === true) {
+    for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+        for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+          if (positionY + blockList[blockListZ].length === gridHeight) {
+            start = false;
+          }
+          else if (grid[y+positionY+1][x+positionX] === 1) {
+            start = false;
+          }
+        }
+      }
+    }
   }
-}
+    
+
+// function moveDown() {
+//   if (start === true) {
+//     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+//       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+//         if (positionY + blockList[blockListZ].length === gridHeight) {
+//           start = false;
+//         }
+//         else if (grid[y+positionY+1][x+positionX] === 1) {
+//           start = false;
+//         }
+//       }
+//     }
+//   }
+
+//   if (start === true) {    
+//     if (frameCount % 10 === 0 && positionY + blockList[blockListZ].length <= gridHeight) {   
+//       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+//         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+//           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+//           if (positionY > 0){
+//             grid[y+positionY-1][x+positionX] = 0;
+//           }
+//         }
+//       } 
+//       grid = [...newGrid];
+//       positionY += 1;
+//     }
+//   }
+
+//   else {
+//     start = false;
+//   }
+// }
 
 function mousePressed() {
   generateBlock();
