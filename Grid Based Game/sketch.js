@@ -70,9 +70,8 @@ function draw() {
   background(220);
   displayGrid();
   moveDown();
-  if (start === true){
-    console.log(positionY + blockList[blockListZ].length);
-  }
+  // console.log(positionY);
+
 }
 function create2DArray() {
   let screen = [];
@@ -114,7 +113,7 @@ function moveDown() {
 
 
   if (start === true) {    
-    if (frameCount % 10 === 0 && positionY + blockList[blockListZ].length <= gridHeight) {   
+    if (frameCount % 10 === 0 && positionY + blockList[blockListZ].length-2 <= gridHeight) {   
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
@@ -130,17 +129,20 @@ function moveDown() {
   
   if (start === true) {
     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-        for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          if (positionY + blockList[blockListZ].length === gridHeight) {
-            start = false;
-          }
-          else if (grid[y+positionY+1][x+positionX] === 1) {
-            start = false;
+      for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
+        if (positionY + blockList[blockListZ].length -1 === gridHeight) {
+          start = false;        
+          if (y+positionY + 1 < gridHeight) {
+            if (grid[y+positionY+1][x+positionX] === 1) {
+              start = false;
+              // console.log(grid[y+positionY+1][x+positionX]);
+            }
           }
         }
       }
     }
   }
+}
     
 
 // function moveDown() {
