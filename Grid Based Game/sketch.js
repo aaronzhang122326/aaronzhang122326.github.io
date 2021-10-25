@@ -17,6 +17,9 @@ let blockListY = 0;
 let positionY = 0;
 let positionX;
 let start = false;
+let left = false;
+let right = false;
+let nextMove = true;
 
 let iBlocks = [
   [1,1,1,1,1],
@@ -113,7 +116,7 @@ function moveDown() {
 
 
   if (start === true) {    
-    if (frameCount % 10 === 0 && positionY + blockList[blockListZ].length-2 <= gridHeight) {   
+    if (frameCount % 20 === 0 && positionY + blockList[blockListZ].length-2 <= gridHeight) {   
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
@@ -122,12 +125,31 @@ function moveDown() {
           }
         }
       } 
-      if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
-        grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+        
+      if (left === true) { // can possibly simplify
+        if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+          grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+        }
+        if (positionY > 0) {
+          if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+            grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+          }
+        }
+        left = false;
       }
-      if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
-        grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+
+      if (right === true) {
+        if (grid[positionY][positionX-1] === 1) {
+          grid[positionY][positionX-1] = 0;
+        }
+        if (positionY > 0) {
+          if (grid[positionY-1][positionX-1] === 1) {
+            grid[positionY-1][positionX-1] = 0;
+          }
+        }
+        right = false;
       }
+
       positionY += 1;
     }
   }
@@ -141,7 +163,7 @@ function moveDown() {
         else if (y+positionY + 1 < gridHeight) {          
           if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
             start = false;
-            if (frameCount % 10 === 0) {
+            if (frameCount % 20 === 0) {
               for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
                 for (let x = 0; x < blockList[blockListZ][y].length; x++) {
                   grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
@@ -158,6 +180,7 @@ function moveDown() {
       }
     }
   }
+  nextMove = true;
 }
 
 function mousePressed() {
@@ -166,17 +189,15 @@ function mousePressed() {
 }
 
 function keyPressed() {
-  if (keyCode === 65 && start === true) {
+  if (keyCode === 65 && start === true && nextMove === true) {
     positionX -= 1;
-    // if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
-    //   grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
-    // }
-    // if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
-    //   grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
-    // }
+    left = true;
+    nextMove = false;
+
   }
   else if (keyCode === 68 && start === true) {
     positionX += 1;
+    right = true;
   }
   else if (keyCode === 83 && start === true) {
     // positionX += 1;
