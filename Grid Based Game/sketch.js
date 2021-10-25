@@ -73,7 +73,9 @@ function draw() {
   background(220);
   displayGrid();
   moveDown();
-  // console.log(positionY);
+  moveBlock();
+  drawGrid();
+  console.log(positionY);
 
 }
 function create2DArray() {
@@ -103,6 +105,14 @@ function displayGrid() {
   }
 }
 
+function drawGrid() {
+  for (let y = gridHeight-1; y >= 0; y--) {
+    for (let x = 0; x < gridWidth; x++) {
+      grid[y+positionY][x+positionX] = grid[y][x]; 
+    }
+  }
+}
+
 function generateBlock() {
   blockList.push(random(blockChoices));
   blockListZ += 1;
@@ -110,96 +120,188 @@ function generateBlock() {
   positionY = 0;
   positionX = round(random(0, gridWidth-blockList[blockListZ][0].length));
   start = true;
+  for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+    for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+      grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+    }
+  }
 }
 
-function moveDown() {
-
-
+function moveDown() {//&& positionY + blockList[blockListZ].length-2 <= gridHeight
   if (start === true) {    
-    if (frameCount % 20 === 0 && positionY + blockList[blockListZ].length-2 <= gridHeight) {   
-      for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-        for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-          if (positionY > 0){
-            grid[y+positionY-1][x+positionX] = 0;
-          }
-        }
-      } 
-        
-      if (left === true) { // can possibly simplify
-        if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
-          grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
-        }
-        if (positionY > 0) {
-          if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
-            grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
-          }
-        }
-        left = false;
-      }
-
-      if (right === true) {
-        if (grid[positionY][positionX-1] === 1) {
-          grid[positionY][positionX-1] = 0;
-        }
-        if (positionY > 0) {
-          if (grid[positionY-1][positionX-1] === 1) {
-            grid[positionY-1][positionX-1] = 0;
-          }
-        }
-        right = false;
-      }
-
+    if (frameCount % 10 === 0) {   
       positionY += 1;
     }
   }
-  
-  if (start === true) {
-    for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-      for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
-        if (positionY + blockList[blockListZ].length -1 === gridHeight) {
-          start = false;   
-        }  
-        else if (y+positionY + 1 < gridHeight) {          
-          if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
-            start = false;
-            if (frameCount % 20 === 0) {
-              for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-                for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-                  grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-                  if (positionY > 0){
-                    grid[y+positionY-1][x+positionX] = 0;
-                  }
-                }
-              }
-            }
-            // console.log(grid[y+positionY+1][x+positionX]);
-            
-          }
-        }
-      }
-    }
-  }
-  nextMove = true;
-}
 
+//       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+//         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+//           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+//           if (positionY > 0){
+//             grid[y+positionY-1][x+positionX] = 0;
+//           }
+//         }
+//       } 
+        
+//       if (left === true) { // can possibly simplify
+//         if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+//           grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+//         }
+//         if (positionY > 0) {
+//           if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+//             grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+//           }
+//         }
+//         left = false;
+//         nextMove = true;
+//       }
+//       if (right === true) {
+//         if (grid[positionY][positionX-1] === 1) {
+//           grid[positionY][positionX-1] = 0;
+//         }
+//         if (positionY > 0) {
+//           if (grid[positionY-1][positionX-1] === 1) {
+//             grid[positionY-1][positionX-1] = 0;
+//           }
+//         }
+//         right = false;
+//         nextMove = true;
+//       }
+//       positionY += 1;
+//     }
+
+    
+//   }
+  
+//   if (start === true) {
+//     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+//       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
+//         if (positionY + blockList[blockListZ].length -1 === gridHeight) {
+//           start = false;   
+//         }  
+//         else if (y+positionY + 1 < gridHeight) {          
+//           if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
+//             start = false;
+//             if (frameCount % 10 === 0) {
+//               for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+//                 for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+//                   grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+//                   if (positionY > 0){
+//                     grid[y+positionY-1][x+positionX] = 0;
+//                   }
+//                 }
+//               }
+//             }
+//             // console.log(grid[y+positionY+1][x+positionX]);
+            
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
+  // if (start === true) {    
+  //   if (frameCount % 10 === 0 && positionY + blockList[blockListZ].length-2 <= gridHeight) {   
+  //     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+  //         grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+  //         if (positionY > 0){
+  //           grid[y+positionY-1][x+positionX] = 0;
+  //         }
+  //       }
+  //     } 
+        
+  //     if (left === true) { // can possibly simplify
+  //       if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+  //         grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+  //       }
+  //       if (positionY > 0) {
+  //         if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+  //           grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+  //         }
+  //       }
+  //       left = false;
+  //       nextMove = true;
+  //     }
+  //     if (right === true) {
+  //       if (grid[positionY][positionX-1] === 1) {
+  //         grid[positionY][positionX-1] = 0;
+  //       }
+  //       if (positionY > 0) {
+  //         if (grid[positionY-1][positionX-1] === 1) {
+  //           grid[positionY-1][positionX-1] = 0;
+  //         }
+  //       }
+  //       right = false;
+  //       nextMove = true;
+  //     }
+  //     positionY += 1;
+  //   }
+
+
+  // }
+  
+  // if (start === true) {
+  //   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //     for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
+  //       if (positionY + blockList[blockListZ].length -1 === gridHeight) {
+  //         start = false;   
+  //       }  
+  //       else if (y+positionY + 1 < gridHeight) {          
+  //         if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
+  //           start = false;
+  //           if (frameCount % 10 === 0) {
+  //             for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //               for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+  //                 grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+  //                 if (positionY > 0){
+  //                   grid[y+positionY-1][x+positionX] = 0;
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           // console.log(grid[y+positionY+1][x+positionX]);
+            
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+// }
+}
 function mousePressed() {
   generateBlock();
   
 }
 
-function keyPressed() {
-  if (keyCode === 65 && start === true && nextMove === true) {
+// function keyPressed() {
+//   if (keyCode === 65 && start === true && nextMove === true) {
+//     nextMove = false;
+//     positionX -= 1;
+//     left = true;
+
+
+//   }
+//   else if (keyCode === 68 && start === true && nextMove === true) {
+//     nextMove = false;
+//     positionX += 1;
+//     right = true;
+//   }
+//   else if (keyCode === 83 && start === true) {
+//     // positionX += 1;
+//   }
+// }
+
+function moveBlock() {
+  if (keyIsDown(65) && start === true && nextMove === true) {
+    nextMove = false;
     positionX -= 1;
     left = true;
-    nextMove = false;
-
   }
-  else if (keyCode === 68 && start === true) {
+  else if (keyIsDown(68) && start === true && nextMove === true) {
+    nextMove = false;
     positionX += 1;
     right = true;
-  }
-  else if (keyCode === 83 && start === true) {
-    // positionX += 1;
   }
 }
