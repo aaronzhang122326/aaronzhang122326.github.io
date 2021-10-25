@@ -163,7 +163,12 @@ function mousePressed() {
 function keyPressed() {
   if (keyCode === 65 && start === true) {
     positionX -= 1;
-    // grid[y+positionY][x+positionX + blockList[blockListZ][blockListY].length] = 0;
+    if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+      grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+    }
+    if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+      grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+    }
   }
   else if (keyCode === 68 && start === true) {
     positionX += 1;
