@@ -119,10 +119,15 @@ function moveDown() {
           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
           if (positionY > 0){
             grid[y+positionY-1][x+positionX] = 0;
-            
           }
         }
       } 
+      if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
+        grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+      }
+      if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
+        grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+      }
       positionY += 1;
     }
   }
@@ -132,7 +137,7 @@ function moveDown() {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length -1 === gridHeight) {
           start = false;   
-          }  
+        }  
         else if (y+positionY + 1 < gridHeight) {          
           if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
             start = false;
@@ -163,12 +168,12 @@ function mousePressed() {
 function keyPressed() {
   if (keyCode === 65 && start === true) {
     positionX -= 1;
-    if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
-      grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
-    }
-    if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
-      grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
-    }
+    // if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
+    //   grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+    // }
+    // if (grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] === 1 && frameCount % 10) {
+    //   grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
+    // }
   }
   else if (keyCode === 68 && start === true) {
     positionX += 1;
