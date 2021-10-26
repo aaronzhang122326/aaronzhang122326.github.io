@@ -131,32 +131,42 @@ function moveDown() {
             grid[y+positionY-1][x+positionX] = 0;
           }
         }
-      }
-    }
+      
+    
 
-    if (left === true && frameCount % 10 === 0) { // can possibly simplify
-      if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
-        grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
-      }
-      if (positionY > 0) {
-        if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length + 1] === 1) {
-          grid[positionY+1][positionX + blockList[blockListZ][blockListY].length +1] = 0;
+        if (left === true && frameCount % 10 === 0) { // can possibly simplify
+          if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+            grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+          }
+          if (positionY > 0) {
+            if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+              grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] = 0;
+            }
+          }
+
+          if (frameCount % 60 === 0) {
+            grid[positionY][positionX + blockList[blockListZ][blockListY].length-1] = 0;
+          }
+          left = false;
+          nextMove = true;
+        }
+
+        if (right === true && frameCount % 10 === 0) {
+          if (grid[positionY+y][positionX-1] === 1) {      
+            // console.log("1");
+            grid[positionY + y][positionX-1] = 0;
+          }
+          if (positionY > 0) {
+            if (grid[positionY][positionX-1] === 1) {
+              // console.log("2");
+              grid[positionY-1][positionX-1] = 0;
+            }
+          }
         }
       }
-      left = false;
-      nextMove = true;
-    }
 
-    if (right === true && frameCount % 10 === 0) {
-      if (grid[positionY+1][positionX-1] === 1) {      
-        console.log("1");
-        grid[positionY + 1][positionX-1] = 0;
-      }
-      if (positionY > 0) {
-        if (grid[positionY][positionX-1] === 1) {
-          console.log("2");
-          grid[positionY][positionX-1] = 0;
-        }
+      if (frameCount % 60 === 0) {
+        grid[positionY][positionX-1] = 0;
       }
       right = false;
       nextMove = true;
@@ -165,7 +175,7 @@ function moveDown() {
       positionY += 1;
     }
   }
-}
+
 
   
   if (start === true) {
@@ -174,9 +184,9 @@ function moveDown() {
         if (positionY + blockList[blockListZ].length -1 === gridHeight) {
           start = false;   
         }  
-        else if (y+positionY + 1 < gridHeight) {          
-          if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
-            start = false;
+        // else if (y+positionY + 1 < gridHeight) {          
+        //   if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
+        //     start = false;
             // if (frameCount % 60 === 0) {
             //   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
             //     for (let x = 0; x < blockList[blockListZ][y].length; x++) {
@@ -189,11 +199,12 @@ function moveDown() {
             // }
             // console.log(grid[y+positionY+1][x+positionX]);
             
-          }
-        }
+        //   }
+        // }
       }
     }
   }
+}
 
 function mousePressed() {
   generateBlock();
