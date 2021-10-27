@@ -119,101 +119,131 @@ function generateBlock() {
   positionY = 0;
   positionX = round(random(0, gridWidth-blockList[blockListZ][0].length));
   start = true;
+  for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+    for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+      grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
+    }
+  }
 }
 
 function moveDown() {
-  if (start === true) {    
+  if (start === true) {
+    // console.log(positionX);
     if (frameCount % 10 === 0) {
+      console.log("1");
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-          if (positionY > 0) {
-            grid[y+positionY-1][x+positionX] = 0;
-          }
-        }
-      
-    
-
-        if (left === true && frameCount % 10 === 0) { // can possibly simplify
-          if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
-            grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
-          }
-          if (positionY > 0) {
-            if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] === 1) {
-              grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] = 0;
-            }
-          }
-
-          if (frameCount % 60 === 0) {
-            grid[positionY][positionX + blockList[blockListZ][blockListY].length-1] = 0;
-          }
-          left = false;
-          nextMove = true;
-        }
-
-        if (right === true && frameCount % 10 === 0) {
-          if (grid[positionY+y][positionX-1] === 1) {      
-            // console.log("1");
-            grid[positionY + y][positionX-1] = 0;
-          }
-          if (positionY > 0) {
-            if (grid[positionY][positionX-1] === 1) {
-              // console.log("2");
-              grid[positionY-1][positionX-1] = 0;
-            }
-          }
+          newGrid[y+positionY][x+positionX-1] = grid[y+positionY][x+positionX];
         }
       }
+    }
 
-      if (frameCount % 60 === 0) {
-        grid[positionY][positionX-1] = 0;
-      }
-      right = false;
-      nextMove = true;
-    }
-    if (frameCount % 60 === 0) {
-      positionY += 1;
-    }
+    // if (left === true && frameCount % 10 === 0) { // can possibly simplify
+    //   if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+    //     newGrid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+    //   }
+    //   if (positionY > 0) {
+    //     if (grid[positionY+y][positionX + blockList[blockListZ][blockListY].length] === 1) {
+    //       newGrid[positionY+y][positionX + blockList[blockListZ][blockListY].length] = 0;
+    //     }
+    //   }
+    //   left = false;
+    //   nextMove = true;
+    // }
   }
+  grid = newGrid;
+}
+
+
+
+  // if (start === true) {    
+  //   if (frameCount % 10 === 0) {
+  //     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+  //         grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+  //         if (positionY > 0) {
+  //           grid[y+positionY-1][x+positionX] = 0;
+  //         }
+  //       }
+  //       if (left === true && frameCount % 10 === 0) { // can possibly simplify
+  //         if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+  //           grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+  //         }
+  //         if (positionY > 0) {
+  //           if (grid[positionY+y][positionX + blockList[blockListZ][blockListY].length] === 1) {
+  //             grid[positionY+y][positionX + blockList[blockListZ][blockListY].length] = 0;
+  //           }
+  //         }
+
+  //         if (frameCount % 60 === 0) {
+  //           grid[positionY][positionX + blockList[blockListZ][blockListY].length-1] = 0;
+  //         }
+  //         left = false;
+  //         nextMove = true;
+  //       }
+  //       if (right === true && frameCount % 10 === 0) {
+  //         if (grid[positionY+y][positionX-1] === 1) {      
+  //           console.log("1");
+  //           grid[positionY + y][positionX-1] = 0;
+  //         }
+  //         if (positionY > 0) {
+  //           if (grid[positionY][positionX-1] === 1) {
+  //             console.log("2");
+  //             grid[positionY-1][positionX-1] = 0;
+  //           }
+  //         }      
+  //         if (frameCount % 60 === 0) {
+  //           grid[positionY][positionX] = 0;
+  //           // grid[positionY][positionX-1] = 0;
+  //         }
+  //         right = false;
+  //         nextMove = true;
+  //       }
+  //     }
+  //   }
+  //   if (frameCount % 60 === 0) {
+  //     positionY += 1;
+  //   }
+  // }
 
 
   
-  if (start === true) {
-    for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-      for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
-        if (positionY + blockList[blockListZ].length -1 === gridHeight) {
-          start = false;   
-        }  
-        // else if (y+positionY + 1 < gridHeight) {          
-        //   if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
-        //     start = false;
-            // if (frameCount % 60 === 0) {
-            //   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-            //     for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-            //       grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-            //       if (positionY > 0){
-            //         grid[y+positionY-1][x+positionX] = 0;
-            //       }
-            //     }
-            //   }
-            // }
-            // console.log(grid[y+positionY+1][x+positionX]);
+  // if (start === true) {
+  //   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //     for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
+  //       if (positionY + blockList[blockListZ].length -1 === gridHeight) {
+  //         start = false;   
+  //       }  
+  //       // else if (y+positionY + 1 < gridHeight) {          
+  //       //   if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
+  //       //     start = false;
+  //           // if (frameCount % 60 === 0) {
+  //           //   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //           //     for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+  //           //       grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+  //           //       if (positionY > 0){
+  //           //         grid[y+positionY-1][x+positionX] = 0;
+  //           //       }
+  //           //     }
+  //           //   }
+  //           // }
+  //           // console.log(grid[y+positionY+1][x+positionX]);
             
-        //   }
-        // }
-      }
-    }
-  }
-}
+  //       //   }
+  //       // }
+  //     }
+  //   }
+  // }
+// }
 
 function mousePressed() {
   generateBlock();
   
 }
 
-function moveBlock() {
-  if (keyIsDown(65) && start === true && nextMove === true) {
-    nextMove = false;
+function moveBlock() { //&& nextMove === true
+  if (keyIsDown(65) && start === true ) {
+    // nextMove = false;
     positionX -= 1;
     left = true;
   }
