@@ -20,6 +20,7 @@ let start = false;
 let left = false;
 let right = false;
 let nextMove = true;
+let newX;
 
 let iBlocks = [
   [1,1,1,1,1],
@@ -123,7 +124,8 @@ function generateBlock() {
     for (let x = 0; x < blockList[blockListZ][y].length; x++) {
       grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
     }
-  }
+  }  
+  let newX = positionX;
 }
 
 function moveDown() {
@@ -133,7 +135,7 @@ function moveDown() {
       console.log("1");
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          newGrid[y+positionY][x+positionX-1] = grid[y+positionY][x+positionX];
+          newGrid[y+positionY][x+positionX] = grid[y+positionY][x+positionX+newX];
         }
       }
     }
