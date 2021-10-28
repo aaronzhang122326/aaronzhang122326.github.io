@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+let x = 0;
 let experiment = 0;
 
 function setup() {
@@ -14,12 +15,14 @@ function setup() {
 
 function draw() {
   background(220);
-  console.log(experiment);
+  console.log(question());
 }
 
 function question(){
   for (let x = 0; x<10; x++) {
-    return experiment += 1;
+    if (x === 4){
+      return x = 5;
+    }
   }
 }
 function mousePressed(){
