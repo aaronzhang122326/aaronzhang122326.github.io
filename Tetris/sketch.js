@@ -104,13 +104,20 @@ function displayGrid() {
     }
   }
 }
-function findEdge(direction, row) {
+function findEdge(direction, row) {//
   if (direction === 1) {
-    for (let x = blockList[blockListZ][row-1].length-1; x >= 0; x--) {
-      if (grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+    for (let x = 0; x < blockList[blockListZ][row-1].length; x++) {
+      if (grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length-x] === 1) {//
         console.log(x);
-        return grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length] = 0;
-        
+        return grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length-x] = 0, grid[positionY+1][positionX + blockList[blockListZ][blockListY].length-x-1] = 1;
+      }
+    }
+  }
+
+  else if (direction === 2) {
+    for (let x = 0; x < blockList[blockListZ][row-1].length; x++) {
+      if (grid[positionY+row-1][positionX + x-1] === 1) {
+        return grid[positionY+row-1][positionX + x-1] = 0, grid[positionY+1][positionX + x] = 1;
       }
     }
   }
@@ -142,7 +149,7 @@ function moveDown() {
           if (y+positionY + 1 < gridHeight && positionY > 1) {          
             if (blockList[blockListZ][y][x] === 1 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
               if (grid[y+positionY+1][x+positionX] === 1) {//bug 
-                start = false;
+                // start = false;
               }
             }
           }
@@ -153,12 +160,13 @@ function moveDown() {
           }
         }
         if (left === true && frameCount % 10 === 0) {  
-          findEdge(1, 2);
-        }
-        
+          if (blockList[blockListZ].length > 1){
+            findEdge(1, 2);
+          }
           if (positionY > 0) {
             findEdge(1, 1);
           }
+        } //bug
 
           if (frameCount % 60 === 0) {
             grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
@@ -183,14 +191,21 @@ function moveDown() {
           // nextMove = true;
         // }
         if (right === true && frameCount % 10 === 0) {
-          if (grid[positionY+1][positionX-1] === 1) {      
-            grid[positionY+1][positionX-1] = 0;
+          if (blockList[blockListZ].length > 1) {
+            findEdge(2,2);
           }
+          // if (grid[positionY+1][positionX-1] === 1) {      
+          //   grid[positionY+1][positionX-1] = 0;
+        // }
           if (positionY > 0) {
-            if (grid[positionY][positionX-1] === 1) {
-              grid[positionY][positionX-1] = 0;
-            }
-          }      
+            findEdge(2,1);
+          }
+
+
+            // if (grid[positionY][positionX-1] === 1) {
+            //   grid[positionY][positionX-1] = 0;
+          // }
+                
           if (frameCount % 60 === 0) { //fixing bug
             grid[positionY-1][positionX-1] = 0;
             // console.log("1");
