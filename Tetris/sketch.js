@@ -105,12 +105,14 @@ function displayGrid() {
   }
 }
 
+
 function generateBlock() {
   blockList.push(random(blockChoices));
   blockListZ += 1;
 
   positionY = 0;
   positionX = round(random(0, gridWidth-blockList[blockListZ][0].length));
+
   start = true;
 }
 
@@ -122,15 +124,41 @@ function moveDown() {
     if (frameCount % 10 === 0) {
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+          // grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+          if (blockList[blockListZ][y][x] === 1){
+            grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+          }
+          if (y+positionY + 1 < gridHeight && positionY > 1) {          
+            if (blockList[blockListZ][y][x] === 1 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
+              if (grid[y+positionY+1][x+positionX] === 1) {//bug 
+                console.log("1");
+                start = false;
+              }
+            }
+          }
           if (frameCount % 60 === 0) { //possible bug
             if (positionY > 0) {
               grid[y+positionY-1][x+positionX] = 0;
             }
           }
         }
-        if (left === true && frameCount % 10 === 0) { // can possibly simplify
-          if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+        if (left === true && frameCount % 10 === 0) { 
+          if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] === 1){
+            let edge = grid[positionY+1][positionX + blockList[blockListZ][blockListY].length];
+          }
+          else if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length-1] === 1){
+            let edge = grid[positionY+1][positionX + blockList[blockListZ][blockListY].length];
+          }
+          else if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length-2] === 1){
+            let edge = grid[positionY+1][positionX + blockList[blockListZ][blockListY].length];
+          }
+          else if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length-3] === 1){
+            let edge = grid[positionY+1][positionX + blockList[blockListZ][blockListY].length];
+          }
+
+
+    
+          if (grid[positionY+1][positionX + edge === 1) { //problem
             grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] = 0;
           }
           if (positionY > 0) {
@@ -156,7 +184,7 @@ function moveDown() {
           }      
           if (frameCount % 60 === 0) { //fixing bug
             grid[positionY-1][positionX-1] = 0;
-            console.log("1");
+            // console.log("1");
           }
           right = false;
           nextMove = true;
@@ -170,15 +198,10 @@ function moveDown() {
   if (start === true) {//when to stop the block
     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
-        if (positionY + blockList[blockListZ].length -1 === gridHeight) {
+        if (positionY + blockList[blockListZ].length  === gridHeight) {
           start = false;   
         }  
-        else if (y+positionY + 1 < gridHeight && positionY > 1) {          
-          if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
-            start = false;
-          }
-        }
-      }
+      }//code
     }
   }
 }
