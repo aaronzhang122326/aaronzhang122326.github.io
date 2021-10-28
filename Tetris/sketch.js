@@ -115,42 +115,47 @@ function generateBlock() {
 }
 
 function moveDown() {
-  if (start === true) {    
+  if (start === true) {//after block have been spawned    
+    if (frameCount % 60 === 0) {
+      positionY += 1;
+    }
     if (frameCount % 10 === 0) {
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-          if (positionY > 0) {
-            grid[y+positionY-1][x+positionX] = 0;
+          if (frameCount % 60 === 0) { //possible bug
+            if (positionY > 0) {
+              grid[y+positionY-1][x+positionX] = 0;
+            }
           }
         }
         if (left === true && frameCount % 10 === 0) { // can possibly simplify
-          if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
-            grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
+          if (grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] === 1) {
+            grid[positionY+1][positionX + blockList[blockListZ][blockListY].length] = 0;
           }
           if (positionY > 0) {
-            if (grid[positionY+y][positionX + blockList[blockListZ][blockListY].length] === 1) {
-              grid[positionY+y][positionX + blockList[blockListZ][blockListY].length] = 0;
+            if (grid[positionY][positionX + blockList[blockListZ][blockListY].length] === 1) {
+              grid[positionY][positionX + blockList[blockListZ][blockListY].length] = 0;
             }
           }
 
           if (frameCount % 60 === 0) {
-            grid[positionY][positionX + blockList[blockListZ][blockListY].length-1] = 0;
+            grid[positionY-1][positionX + blockList[blockListZ][blockListY].length] = 0;
           }
           left = false;
           nextMove = true;
         }
         if (right === true && frameCount % 10 === 0) {
-          if (grid[positionY+y][positionX-1] === 1) {      
-            grid[positionY + y][positionX-1] = 0;
+          if (grid[positionY+1][positionX-1] === 1) {      
+            grid[positionY+1][positionX-1] = 0;
           }
           if (positionY > 0) {
             if (grid[positionY][positionX-1] === 1) {
-              grid[positionY+y-1][positionX-1] = 0;
+              grid[positionY][positionX-1] = 0;
             }
           }      
-          if (frameCount % 60 === 0) {
-            grid[positionY][positionX] = 0;
+          if (frameCount % 60 === 0) { //fixing bug
+            grid[positionY-1][positionX-1] = 0;
             console.log("1");
           }
           right = false;
@@ -158,14 +163,11 @@ function moveDown() {
         }
       }
     }
-    if (frameCount % 60 === 0) {
-      positionY += 1;
-    }
   }
 
 
   
-  if (start === true) {
+  if (start === true) {//when to stop the block
     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length -1 === gridHeight) {
@@ -174,16 +176,6 @@ function moveDown() {
         else if (y+positionY + 1 < gridHeight && positionY > 1) {          
           if (grid[y+positionY+1][x+positionX] === 1 && grid[y+positionY-1][x+positionX] === 1) {
             start = false;
-            if (frameCount % 60 === 0) {
-              for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-                for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-                  grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-                  if (positionY > 0){
-                    grid[y+positionY-1][x+positionX] = 0;
-                  }
-                }
-              }
-            }
           }
         }
       }
