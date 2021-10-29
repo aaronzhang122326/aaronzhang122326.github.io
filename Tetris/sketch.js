@@ -108,8 +108,8 @@ function findEdge(direction, row) {//
   if (direction === 1) {
     for (let x = 0; x < blockList[blockListZ][row-1].length; x++) {
       if (grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length-x] === 1) {//, grid[positionY+1][positionX + blockList[blockListZ][blockListY].length-x-1] = 1
-        console.log(x);
-        return grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length-x] = 0;
+        //console.log(positionY+1, positionX + blockList[blockListZ][blockListY].length-x-1);
+        return grid[positionY+row-1][positionX + blockList[blockListZ][blockListY].length-x] = 0, grid[positionY+1][positionX + blockList[blockListZ][blockListY].length-x-1] = 1;
       }
     }
   }
@@ -143,8 +143,13 @@ function moveDown() {
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
           // grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+
+          if (left === true) {
+            console.log("1");
+            grid[y+positionY][x+positionX+1] = 0;
+          }
           if (blockList[blockListZ][y][x] === 1){
-            console.log(y, x);
+            //console.log(y, x);
             grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
           }
           if (y+positionY + 1 < gridHeight && positionY > 1) {          
