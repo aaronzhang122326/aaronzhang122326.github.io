@@ -31,7 +31,7 @@ let canRotate = false;
 let previousRotate;
 
 let iBlocks = [
-  [1,1,1,1,1],
+  [1,1,1,1],
 ];
 
 let iBlocksTwo = [
@@ -39,53 +39,48 @@ let iBlocksTwo = [
   [1],
   [1],
   [1],
-  [1],
 ];
 
 let jBlocks = [
-  [1,0,0,0],
-  [1,1,1,1],
+  [1,0,0],
+  [1,1,1],
 ];
 
 let jBlocksTwo = [
   [1,1],
   [1,0],
   [1,0],
-  [1,0],
 ];
 
 let jBlocksThree = [
-  [1,1,1,1],
-  [0,0,0,1],
+  [1,1,1],
+  [0,0,1],
 ];
 
 let jBlocksFour = [
-  [0,1],
   [0,1],
   [0,1],
   [1,1],
 ]
               
 let lBlocks = [
-  [0,0,0,1],
-  [1,1,1,1],
+  [0,0,1],
+  [1,1,1],
 ];
 
 let lBlocksTwo = [
-  [1,0],
   [1,0],
   [1,0],
   [1,1],
 ];
 
 let lBlocksThree = [
-  [1,1,1,1],
-  [1,0,0,0],
+  [1,1,1],
+  [1,0,0],
 ];
 
 let lBlocksFour = [
   [1,1],
-  [0,1],
   [0,1],
   [0,1],
 ];
@@ -205,7 +200,7 @@ function generateBlock() {
 
 function moveDown() {
   if (start === true) {//after block have been spawned    
-    if (frameCount % 30 === 0) {
+    if (frameCount % 10 === 0) {
       positionY += 1;
       b = 1;
     }
@@ -213,7 +208,7 @@ function moveDown() {
     else {
       b = 0;
     }
-    if (frameCount % 10 === 0) {          
+    if (frameCount % 5 === 0) {          
       if (right === true) {
         a = -1;
       }          
@@ -225,11 +220,13 @@ function moveDown() {
       }
       for (let y = blockList[blockListZ].length-1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          grid[y+positionY-b][x+positionX+a] = 0; // possible bug
+          if (grid[y+positionY-b][x+positionX+a] === 1) {
+            grid[y+positionY-b][x+positionX+a] = 0; // possible bug
+          }
         }
       }      
 
-      if (canRotate && frameCount % 30 === 0) {
+      if (canRotate && frameCount % 10 === 0) {
         rotateBlock();        
         positionY += rotateHeight;
         positionX += rotateWidth; 
@@ -253,13 +250,13 @@ function moveDown() {
 
           if (y+positionY + 1 < gridHeight && positionY > 1) {// stoping the block         
             if (blockList[blockListZ][y][x] === 1 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
-              if (grid[y+positionY+1][x+positionX] === 1) {//bug 
+              if (grid[y+positionY+1][x+positionX] === 1) {
                 start = false;
                 clearBlock();
               }
             }
           }
-          if (frameCount % 30 === 0) { //possible bug
+          if (frameCount % 10 === 0) { 
             if (positionY > 0) {
               grid[y+positionY-1][x+positionX] = 0;
             }
@@ -279,10 +276,11 @@ function moveDown() {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length  === gridHeight) {
           start = false; 
-          clearBlock();  
+          clearBlock();
         }  
-      }//code
+      }
     }
+      
   }
 }
 
@@ -416,10 +414,10 @@ function clearBlock(){
       for (let x = 0; x < gridWidth; x++) {
         grid[y][x] = 0;
       }
-      for (let a = gridHeight-1-y; a >= 0 ; a--) {
+      for (let a = y-1; a >= 0 ; a--) {
         for (let b = 0; b < gridWidth; b++) {
           console.log("2");
-          grid[a+1][b] = grid[a][b];
+          grid[a+1][b] = grid[a][b]; // problem
           grid[a][b] = 0;
         }
       }
