@@ -10,7 +10,7 @@
 let number = 0;
 let grid;
 let newGrid;
-let gridHeight = 20;
+let gridHeight = 22;
 let gridWidth = 10;
 let gridSide;
 let blockList;
@@ -33,6 +33,8 @@ let canRotate = false;
 let previousRotate;
 
 let speed = 20;
+
+let gameStart = false;
 
 let iBlocks = [
   [1,1,1,1],
@@ -162,8 +164,11 @@ function setup() {
 function draw() {
   background(220);
   displayGrid();
-  moveDown();
-  moveBlock();
+
+  if (gameStart === true) {
+    moveDown();
+    moveBlock();
+  }
 }
 function create2DArray() {
   let screen = [];
@@ -214,13 +219,20 @@ function moveDown() {
     }
     if (frameCount % 5 === 0) {          
       if (right === true) {
-        a = -1;
-        if (frameCount % speed === 0) { //unfinished 
-
+        if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 1) { //unfinished 
+          positionX -= 1;
+        }
+        else {
+          a = -1;
         }
       }          
       else if (left === true) {
-        a = 1;
+        if (frameCount % speed === 0 && grid[positionY+1][positionX-1] === 1) { //unfinished 
+          positionX += 1;
+        }
+        else {
+          a = 1; 
+        }
       }
       else {
         a = 0;
@@ -259,7 +271,7 @@ function moveDown() {
             grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
           }
 
-          if (y+positionY + 1 < gridHeight && positionY > 1) {// stoping the block         
+          if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
             if (blockList[blockListZ][y][x] === 1 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
               if (grid[y+positionY+1][x+positionX] === 1) { 
                 start = false;
@@ -387,7 +399,7 @@ function rotateBlock() { //can shorten later
 }
 
 function mousePressed() {
-  generateBlock();
+  gameStart = !gameStart;
 }
 
 function moveBlock() { //
@@ -429,4 +441,12 @@ function clearBlock(){
       }
     } 
   }
+  for (let y = 0; y < 2; y++){
+    for (let x = 0; x < gridWidth; x++){
+      if (grid[y][x] === 1) {
+        gameStart = false;
+      }
+    }
+  }
 }
+
