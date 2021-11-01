@@ -36,6 +36,8 @@ let speed = 20;
 
 let gameStart = false;
 
+let clearSound;
+
 let iBlocks = [
   [1,1,1,1],
 ];
@@ -149,6 +151,14 @@ let tBlockSet = [tBlocks, tBlocksTwo, tBlocksThree, tBlocksFour];
 let sBlockSet = [sBlocks, sBlocksTwo];
 let zBlockSet = [zBlocks, zBlocksTwo]; 
 
+function preload() {
+  soundFormats('ogg');
+  clearSound = loadSound('assets/clear.mp3');
+  fallSound = loadSound('assets/fall.mp3');
+  rotateSound = loadSound('assets/selection.mp3');
+  lineSound = loadSound('assets/line.mp3');
+}
+
 function setup() {
 
   createCanvas(windowWidth, windowHeight);
@@ -217,8 +227,9 @@ function moveDown() {
     else {
       b = 0;
     }
-    if (frameCount % 5 === 0) {          
+    if (frameCount % 5 === 0) {      
       if (right === true) {
+        lineSound.play();
         if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 1) { //unfinished 
           positionX -= 1;
         }
@@ -227,6 +238,7 @@ function moveDown() {
         }
       }          
       else if (left === true) {
+        lineSound.play();
         if (frameCount % speed === 0 && grid[positionY+1][positionX-1] === 1) { //unfinished 
           positionX += 1;
         }
@@ -254,7 +266,7 @@ function moveDown() {
         positionY += rotateHeight;
         positionX += rotateWidth; 
         
-        for (let y = blockList[blockListZ].length -1; y >= 0; y--) { // can possibly shorten
+        for (let y = blockList[blockListZ].length -1; y >= 0; y--) { //check if block can rotate
           for (let x = 0; x < blockList[blockListZ][y].length; x++) {
             if (grid[y+positionY][x+positionX] !== 0 && blockList[blockListZ][y][x] !== 0){
               positionY -= rotateHeight, positionX -= rotateWidth;
@@ -262,6 +274,7 @@ function moveDown() {
             }
           }
         }
+        rotateSound.play();
         canRotate = false; 
       }
       //where rotate has to happen
@@ -294,6 +307,7 @@ function moveDown() {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length === gridHeight) {
           start = false; 
+          fallSound.play();
           clearBlock();
         }  
       }
@@ -439,6 +453,7 @@ function clearBlock(){
           grid[a][b] = 0;
         }
       }
+      clearSound.play();
     } 
   }
   for (let y = 0; y < 2; y++){
