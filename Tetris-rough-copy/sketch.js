@@ -24,6 +24,9 @@ let right = false;
 let nextMove = true;
 let newX;
 
+let manualDown = false;
+let nextMoveDown = true;
+
 let a = 0;
 let b = 1;
 let rotateWidth;
@@ -37,6 +40,11 @@ let speed = 20;
 let gameStart = false;
 
 let clearSound;
+let lineSound;
+let fallSound;
+let rotateSound;
+
+let i, o, z, s, j, l, t;
 
 let iBlocks = [
   [1,1,1,1],
@@ -69,7 +77,7 @@ let jBlocksFour = [
   [0,1],
   [0,1],
   [1,1],
-]
+];
               
 let lBlocks = [
   [0,0,1],
@@ -157,6 +165,14 @@ function preload() {
   fallSound = loadSound('assets/fall.mp3');
   rotateSound = loadSound('assets/selection.mp3');
   lineSound = loadSound('assets/line.mp3');
+
+  i = loadImage('assets/iblocks.png');
+  s = loadImage('assets/sblocks.png');
+  z = loadImage('assets/zblocks.png');
+  j = loadImage('assets/jblocks.png');
+  l = loadImage('assets/lblocks.png');
+  o = loadImage('assets/oblocks.png');
+  t = loadImage('assets/tblocks.png');
 }
 
 function setup() {
@@ -255,11 +271,14 @@ function moveDown() {
           if (grid[y+positionY-b][x+positionX+a] === 1 && blockList[blockListZ][y][x] === 1) {
             grid[y+positionY-b][x+positionX+a] = 0; // possible bug
           }
-          else {
+          // else {
 
-          }
+          // }
         }
       }      
+      if (manualDown === true) {
+        dropDown();
+      }
 
       if (canRotate && frameCount % 10 === 0) {
         rotateBlock();        
@@ -299,6 +318,7 @@ function moveDown() {
       left = false;
       right = false;
       nextMove = true;
+      nextMoveDown = true;
     }
   }
 
@@ -427,6 +447,12 @@ function moveBlock() { //
     positionX += 1;
     right = true;
   }
+  if (keyIsDown(83) && start === true) {
+    manualDown = true;
+  }
+  else {
+    manualDown = false;
+  }
 }
 
 function keyPressed() {
@@ -465,3 +491,9 @@ function clearBlock(){
   }
 }
 
+function dropDown() {
+  if (nextMoveDown === true) {
+    nextMoveDown = false;
+    positionY += 1;
+  }
+}
