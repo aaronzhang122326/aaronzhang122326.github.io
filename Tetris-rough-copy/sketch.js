@@ -58,96 +58,96 @@ let iBlocksTwo = [
 ];
 
 let jBlocks = [
-  [1,0,0],
-  [1,1,1],
+  [2,0,0],
+  [2,2,2],
 ];
 
 let jBlocksTwo = [
-  [1,1],
-  [1,0],
-  [1,0],
+  [2,2],
+  [2,0],
+  [2,0],
 ];
 
 let jBlocksThree = [
-  [1,1,1],
-  [0,0,1],
+  [2,2,2],
+  [0,0,2],
 ];
 
 let jBlocksFour = [
-  [0,1],
-  [0,1],
-  [1,1],
+  [0,2],
+  [0,2],
+  [2,2],
 ];
               
 let lBlocks = [
-  [0,0,1],
-  [1,1,1],
+  [0,0,3],
+  [3,3,3],
 ];
 
 let lBlocksTwo = [
-  [1,0],
-  [1,0],
-  [1,1],
+  [3,0],
+  [3,0],
+  [3,3],
 ];
 
 let lBlocksThree = [
-  [1,1,1],
-  [1,0,0],
+  [3,3,3],
+  [3,0,0],
 ];
 
 let lBlocksFour = [
-  [1,1],
-  [0,1],
-  [0,1],
+  [3,3],
+  [0,3],
+  [0,3],
 ];
 
 let oBlocks = [
-  [1,1],
-  [1,1],
+  [4,4],
+  [4,4],
 ];
 
 let tBlocks = [
-  [0,1,0],
-  [1,1,1],
+  [0,5,0],
+  [5,5,5],
 ];
 
 let tBlocksTwo = [
-  [1,0],
-  [1,1],
-  [1,0],
+  [5,0],
+  [5,5],
+  [5,0],
 ];
 
 let tBlocksThree = [
-  [1,1,1],
-  [0,1,0],
+  [5,5,5],
+  [0,5,0],
 ];
 
 let tBlocksFour = [
-  [0,1],
-  [1,1],
-  [0,1],
+  [0,5],
+  [5,5],
+  [0,5],
 ];
 
 let sBlocks = [
-  [0,1,1],
-  [1,1,0],
+  [0,6,6],
+  [6,6,0],
 ];
 
 let sBlocksTwo = [
-  [1,0],
-  [1,1],
-  [0,1],
+  [6,0],
+  [6,6],
+  [0,6],
 ];
 
 let zBlocks = [
-  [1,1,0],
-  [0,1,1],
+  [7,7,0],
+  [0,7,7],
 ];
 
 let zBlocksTwo = [
-  [0,1],
-  [1,1],
-  [1,0],
+  [0,7],
+  [7,7],
+  [7,0],
 ];
 
 let blockSetOne = [iBlocks, jBlocks, lBlocks, oBlocks, tBlocks, sBlocks, zBlocks, tBlocksThree, jBlocksThree, lBlocksThree];
