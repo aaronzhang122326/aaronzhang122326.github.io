@@ -215,10 +215,11 @@ function displayGrid() {
       }
 
       else if (grid[y][x] === 1) {
-        fill("black");
+        image(i, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+
       }
 
-      rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      // rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
     }
   }
 }
