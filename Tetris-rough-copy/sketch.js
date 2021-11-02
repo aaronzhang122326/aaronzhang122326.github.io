@@ -212,11 +212,35 @@ function displayGrid() {
     for (let x = 0; x < gridWidth; x++) {
       if (grid[y][x] === 0) {
         fill("white");
+        rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
       }
 
       else if (grid[y][x] === 1) {
         image(i, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      }
 
+      else if (grid[y][x] === 2) {
+        image(j, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      }
+
+      else if (grid[y][x] === 3) {
+        image(l, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      }
+      
+      else if (grid[y][x] === 4) {
+        image(o, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      }
+
+      else if (grid[y][x] === 5) {
+        image(t, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      }
+
+      else if (grid[y][x] === 6) {
+        image(s, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+      }
+
+      else if (grid[y][x] === 7) {
+        image(z, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
       }
 
       // rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
@@ -247,7 +271,7 @@ function moveDown() {
     if (frameCount % 5 === 0) {      
       if (right === true) {
         lineSound.play();
-        if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 1) { //unfinished 
+        if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0) { //unfinished 
           positionX -= 1;
         }
         else {
@@ -256,7 +280,7 @@ function moveDown() {
       }          
       else if (left === true) {
         lineSound.play();
-        if (frameCount % speed === 0 && grid[positionY+1][positionX-1] === 1) { //unfinished 
+        if (frameCount % speed === 0 && grid[positionY+1][positionX-1] > 0) { //unfinished 
           positionX += 1;
         }
         else {
@@ -269,7 +293,7 @@ function moveDown() {
 
       for (let y = blockList[blockListZ].length-1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          if (grid[y+positionY-b][x+positionX+a] === 1 && blockList[blockListZ][y][x] === 1) {
+          if (grid[y+positionY-b][x+positionX+a] > 0 && blockList[blockListZ][y][x] > 0) {
             grid[y+positionY-b][x+positionX+a] = 0; // possible bug
           }
           // else {
@@ -300,13 +324,13 @@ function moveDown() {
       //where rotate has to happen
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
-          if (blockList[blockListZ][y][x] === 1){
+          if (blockList[blockListZ][y][x] > 0){
             grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
           }
 
           if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
-            if (blockList[blockListZ][y][x] === 1 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
-              if (grid[y+positionY+1][x+positionX] === 1) { 
+            if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
+              if (grid[y+positionY+1][x+positionX] > 0) { 
                 start = false;
               }
             }
@@ -485,7 +509,7 @@ function clearBlock(){
   }
   for (let y = 0; y < 2; y++){
     for (let x = 0; x < gridWidth; x++){
-      if (grid[y][x] === 1) {
+      if (grid[y][x] > 0) {
         gameStart = false;
       }
     }
