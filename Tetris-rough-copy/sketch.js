@@ -194,6 +194,7 @@ function draw() {
   if (gameStart === true) {
     moveDown();
     moveBlock();
+    console.log(positionY);
   }
 }
 function create2DArray() {
@@ -325,13 +326,23 @@ function moveDown() {
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
           if (blockList[blockListZ][y][x] > 0){
-            grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-          }
+            if (positionY <= 20) {
+              grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
+            }
+          } 
+
+          // try {
+          //   grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
+          // } catch (error) {
+          //   console.log(y, x, y+positionY, x+positionX, blockListZ);//, grid[y+positionY][x+positionX], blockList[blockListZ][y][x]);
+          // }
+            
 
           if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
             if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
               if (grid[y+positionY+1][x+positionX] > 0) { 
                 start = false;
+                console.log(positionY);
               }
             }
           }
@@ -352,6 +363,7 @@ function moveDown() {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length === gridHeight) {
           start = false; 
+          console.log(positionY);
           fallSound.play();
           clearBlock();
         }  
@@ -517,7 +529,7 @@ function clearBlock(){
 }
 
 function dropDown() {
-  if (nextMoveDown === true) {
+  if (nextMoveDown === true && positionY <= 21-blockList[blockListZ].length) { //Problem
     nextMoveDown = false;
     positionY += 1;
   }
