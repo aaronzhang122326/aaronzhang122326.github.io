@@ -37,6 +37,8 @@ let previousRotate;
 
 let speed = 20;
 
+let noDropping = false;
+
 let gameStart = false;
 
 let clearSound;
@@ -271,7 +273,6 @@ function moveDown() {
     }
     if (frameCount % 5 === 0) {      
       if (right === true) {
-        lineSound.play();
         if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0) { //unfinished 
           positionX -= 1;
         }
@@ -280,7 +281,6 @@ function moveDown() {
         }
       }          
       else if (left === true) {
-        lineSound.play();
         if (frameCount % speed === 0 && grid[positionY+1][positionX-1] > 0) { //unfinished 
           positionX += 1;
         }
@@ -297,9 +297,7 @@ function moveDown() {
           if (grid[y+positionY-b][x+positionX+a] > 0 && blockList[blockListZ][y][x] > 0) {
             grid[y+positionY-b][x+positionX+a] = 0; // possible bug
           }
-          // else {
 
-          // }
         }
       }      
       if (manualDown === true) {
@@ -327,23 +325,12 @@ function moveDown() {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
           if (blockList[blockListZ][y][x] > 0){
             grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
-            // if (positionY <= 20) {
-            //   grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
-            // }
           } 
-
-          // try {
-          //   grid[y+positionY][x+positionX] = blockList[blockListZ][y][x]; 
-          // } catch (error) {
-          //   console.log(y, x, y+positionY, x+positionX, blockListZ);//, grid[y+positionY][x+positionX], blockList[blockListZ][y][x]);
-          // }
-            
 
           if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
             if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
               if (grid[y+positionY+1][x+positionX] > 0) { 
                 start = false;
-                console.log(positionY);
               }
             }
           }
@@ -531,7 +518,24 @@ function clearBlock(){
 
 function dropDown() {
   if (nextMoveDown === true && positionY < 21-blockList[blockListZ].length) { //Problem
+  
+  }              
+  if (noDropping === false) {
     nextMoveDown = false;
     positionY += 1;
+  }
+}
+
+function noDropping() {
+  for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+    for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
+      if (y+positionY + 1 < gridHeight -1) {     
+        if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
+          if (grid[y+positionY+1][x+positionX] !== 0) { 
+            return noDropping = true;
+          }
+        }
+      }
+    }
   }
 }
