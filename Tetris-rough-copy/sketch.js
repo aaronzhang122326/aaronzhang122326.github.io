@@ -326,9 +326,10 @@ function moveDown() {
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
           if (blockList[blockListZ][y][x] > 0){
-            if (positionY <= 20) {
-              grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
-            }
+            grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
+            // if (positionY <= 20) {
+            //   grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
+            // }
           } 
 
           // try {
@@ -529,7 +530,7 @@ function clearBlock(){
 }
 
 function dropDown() {
-  if (nextMoveDown === true && positionY <= 21-blockList[blockListZ].length) { //Problem
+  if (nextMoveDown === true && positionY < 21-blockList[blockListZ].length) { //Problem
     nextMoveDown = false;
     positionY += 1;
   }
