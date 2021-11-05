@@ -196,7 +196,7 @@ function draw() {
   if (gameStart === true) {
     moveDown();
     moveBlock();
-    console.log(positionY);
+    //console.log(noDropping);
   }
 }
 function create2DArray() {
@@ -259,11 +259,13 @@ function generateBlock() {
   positionX = round(random(0, gridWidth-blockList[blockListZ][0].length));
 
   start = true;
+  noDropping = false;
 }
 
 function moveDown() {
   if (start === true) {//after block have been spawned    
-    if (frameCount % speed === 0) {
+    //noDrop();
+    if (frameCount % speed === 0 && noDropping === false && positionY < 21-blockList[blockListZ].length) {
       positionY += 1;
       b = 1;
     }
@@ -351,7 +353,6 @@ function moveDown() {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length === gridHeight) {
           start = false; 
-          console.log(positionY);
           fallSound.play();
           clearBlock();
         }  
@@ -518,7 +519,7 @@ function clearBlock(){
 
 function dropDown() {
   if (nextMoveDown === true && positionY < 21-blockList[blockListZ].length) { //Problem
-  
+    noDrop();
   }              
   if (noDropping === false) {
     nextMoveDown = false;
@@ -526,12 +527,13 @@ function dropDown() {
   }
 }
 
-function noDropping() {
+function noDrop() {
   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
     for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
       if (y+positionY + 1 < gridHeight -1) {     
         if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
           if (grid[y+positionY+1][x+positionX] !== 0) { 
+            console.log("1");
             return noDropping = true;
           }
         }
