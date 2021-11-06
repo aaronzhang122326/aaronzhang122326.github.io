@@ -473,6 +473,7 @@ function mousePressed() {
   if (gameover) {
     blockList = [];
     blockListZ = -1;
+    score = 0;
     grid = create2DArray();
     gameover = false;
     generateBlock();
