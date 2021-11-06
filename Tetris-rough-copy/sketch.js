@@ -5,7 +5,10 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-//Bugs: some blocks will merge into other when moving sideways
+//Bugs: overlap of blocks
+//      positionY = -1
+//      clear() does not clear all
+//      score and time
 
 let number = 0;
 let grid;
@@ -45,6 +48,8 @@ let clearSound;
 let lineSound;
 let fallSound;
 let rotateSound;
+
+let score = 0;
 
 let i, o, z, s, j, l, t;
 
@@ -191,8 +196,9 @@ function setup() {
 
 function draw() {
   background(220);
+  data();
   displayGrid();
-
+  
   if (gameStart === true) {
     moveDown();
     moveBlock();
@@ -214,6 +220,7 @@ function displayGrid() {
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
       if (grid[y][x] === 0) {
+        stroke("black");
         fill("white");
         rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
       }
@@ -251,6 +258,20 @@ function displayGrid() {
   }
 }
 
+function findRotateData() {
+  for (let x = 0; x < blockSetTwo.length; x++){
+    if (blockList[blockListZ] === blockSetTwo[x]){
+      return rotateHeight = -(floor((blockList[blockListZ].length-1)/2)), rotateWidth = floor((blockList[blockListZ].length-1)/2);
+    }
+  }
+
+  for (let x = 0; x < blockSetOne.length; x++){
+    if (blockList[blockListZ] === blockSetOne[x]){
+      return rotateHeight = floor((blockList[blockListZ][0].length-1)/2), rotateWidth = -(floor((blockList[blockListZ][0].length-1)/2));
+    }
+  }
+}
+
 function generateBlock() {
   blockList.push(random(blockSetOne));
   blockListZ += 1;
@@ -260,58 +281,45 @@ function generateBlock() {
 
   start = true;
   noDropping = false;
+  findRotateData();
 }
 
 function moveDown() {
   if (start === true) {//after block have been spawned    
-    //noDrop();
-    if (frameCount % speed === 0 && noDropping === false && positionY < 21-blockList[blockListZ].length) {
-      positionY += 1;
-      b = 1;
-    }
-
-    else {
-      b = 0;
-    }
+    
     if (frameCount % 5 === 0) {      
-      if (right === true) {
-        if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0) { //unfinished 
-          positionX -= 1;
-        }
-        else {
-          a = -1;
-        }
-      }          
-      else if (left === true) {
-        if (frameCount % speed === 0 && grid[positionY+1][positionX-1] > 0) { //unfinished 
-          positionX += 1;
-        }
-        else {
-          a = 1; 
-        }
-      }
-      else {
-        a = 0;
-      }
-
       for (let y = blockList[blockListZ].length-1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-          if (grid[y+positionY-b][x+positionX+a] > 0 && blockList[blockListZ][y][x] > 0) {
-            grid[y+positionY-b][x+positionX+a] = 0; // possible bug
+          if (grid[y+positionY][x+positionX] > 0 && blockList[blockListZ][y][x] > 0) {
+            grid[y+positionY][x+positionX] = 0; // possible bug      
           }
-
         }
-      }      
+      }
+    
+      if (left === true) {
+        if (frameCount % (speed/4) === 0 ) { //unfinished && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0
+          positionX -= 1;
+        }
+      }          
+      else if (right === true) {
+        if (frameCount % (speed/4) === 0 ) { //unfinished && grid[positionY+1][positionX-1] > 0
+          positionX += 1;
+        }
+      }
+
+
+
+   
       if (manualDown === true) {
         dropDown();
       }
 
-      if (canRotate && frameCount % 10 === 0) {
+      if (canRotate && frameCount % 10 === 0 && positionY >= rotateHeight) {
         rotateBlock();        
         positionY += rotateHeight;
         positionX += rotateWidth; 
         
-        for (let y = blockList[blockListZ].length -1; y >= 0; y--) { //check if block can rotate
+        for (let y = blockList[blockListZ].length -1; y >= 0; y--) { //check if block can rotate, problem
           for (let x = 0; x < blockList[blockListZ][y].length; x++) {
             if (grid[y+positionY][x+positionX] !== 0 && blockList[blockListZ][y][x] !== 0){
               positionY -= rotateHeight, positionX -= rotateWidth;
@@ -322,7 +330,11 @@ function moveDown() {
         rotateSound.play();
         canRotate = false; 
       }
-      //where rotate has to happen
+      noDrop();
+      if (frameCount % speed === 0 && positionY <= 21-blockList[blockListZ].length && noDropping === false) {
+        positionY += 1;
+      }
+
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
           if (blockList[blockListZ][y][x] > 0){
@@ -339,6 +351,7 @@ function moveDown() {
         }
       }        
       if (start === false) {
+        fallSound.play();
         clearBlock();
       }        
       left = false;
@@ -347,6 +360,92 @@ function moveDown() {
       nextMoveDown = true;
     }
   }
+
+  // if (start === true) {//after block have been spawned    
+    
+  //   if (frameCount % 5 === 0) {      
+  //     if (right === true) {
+  //       if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0) { //unfinished 
+  //         positionX -= 1;
+  //       }
+  //       else {
+  //         a = -1;
+  //       }
+  //     }          
+  //     else if (left === true) {
+  //       if (frameCount % speed === 0 && grid[positionY+1][positionX-1] > 0) { //unfinished 
+  //         positionX += 1;
+  //       }
+  //       else {
+  //         a = 1; 
+  //       }
+  //     }
+  //     else {
+  //       a = 0;
+  //     }
+
+  //     //noDrop();
+  //     if (frameCount % speed === 0 && positionY <= 21-blockList[blockListZ].length && noDropping === false) {
+  //       positionY += 1;
+  //       b = 1;
+  //     }
+
+  //     else {
+  //       b = 0;
+  //     }
+  //     for (let y = blockList[blockListZ].length-1; y >= 0; y--) {
+  //       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+  //         if (grid[y+positionY-b][x+positionX+a] > 0 && blockList[blockListZ][y][x] > 0) {
+  //           grid[y+positionY-b][x+positionX+a] = 0; // possible bug
+  //         }
+
+  //       }
+  //     }      
+  //     if (manualDown === true) {
+  //       dropDown();
+  //     }
+
+  //     if (canRotate && frameCount % 10 === 0 && positionY >= rotateHeight) {
+  //       rotateBlock();        
+  //       //positionY += rotateHeight;
+  //       positionX += rotateWidth; 
+        
+  //       for (let y = blockList[blockListZ].length -1; y >= 0; y--) { //check if block can rotate, problem
+  //         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+  //           if (grid[y+positionY][x+positionX] !== 0 && blockList[blockListZ][y][x] !== 0){
+  //             positionY -= rotateHeight, positionX -= rotateWidth;
+  //             blockList[blockListZ] = previousRotate;
+  //           }
+  //         }
+  //       }
+  //       rotateSound.play();
+  //       canRotate = false; 
+  //     }
+  //     //where rotate has to happen
+  //     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
+  //       for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
+  //         if (blockList[blockListZ][y][x] > 0){
+  //           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
+  //         } 
+
+  //         if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
+  //           if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
+  //             if (grid[y+positionY+1][x+positionX] > 0) { 
+  //               start = false;
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }        
+  //     if (start === false) {
+  //       clearBlock();
+  //     }        
+  //     left = false;
+  //     right = false;
+  //     nextMove = true;
+  //     nextMoveDown = true;
+  //   }
+  // }
 
   if (start === true) {//stop the block when touching bottom
     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
@@ -443,19 +542,7 @@ function rotateBlock() { //can shorten later
     blockList[blockListZ] = lBlocks;
     previousRotate = lBlocksFour;
   }   
-  //code for other blocks 
-
-  for (let x = 0; x < blockSetTwo.length; x++){
-    if (blockList[blockListZ] === blockSetTwo[x]){
-      return rotateHeight = -(floor((blockList[blockListZ].length-1)/2)), rotateWidth = floor((blockList[blockListZ].length-1)/2);
-    }
-  }
-
-  for (let x = 0; x < blockSetOne.length; x++){
-    if (blockList[blockListZ] === blockSetOne[x]){
-      return rotateHeight = floor((blockList[blockListZ][0].length-1)/2), rotateWidth = -(floor((blockList[blockListZ][0].length-1)/2));
-    }
-  }
+  findRotateData();
 }
 
 function mousePressed() {
@@ -465,12 +552,12 @@ function mousePressed() {
 function moveBlock() { //
   if (keyIsDown(65) && start === true && nextMove === true && frameCount % speed !== 0 && grid[positionY][positionX-1] === 0 && grid[positionY+1][positionX-1] === 0) {
     nextMove = false;
-    positionX -= 1;
+    //positionX -= 1;
     left = true;
   }
   else if (keyIsDown(68) && start === true && nextMove === true && frameCount % speed !== 0 && grid[positionY][positionX+blockList[blockListZ][blockListY].length] === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 0) {
     nextMove = false;
-    positionX += 1;
+    //positionX += 1;
     right = true;
   }
   if (keyIsDown(83) && start === true) {
@@ -506,6 +593,7 @@ function clearBlock(){
         }
       }
       clearSound.play();
+      score += 100;
     } 
   }
   for (let y = 0; y < 2; y++){
@@ -519,11 +607,11 @@ function clearBlock(){
 
 function dropDown() {
   if (nextMoveDown === true && positionY < 21-blockList[blockListZ].length) { //Problem
-    noDrop();
-  }              
-  if (noDropping === false) {
-    nextMoveDown = false;
-    positionY += 1;
+    noDrop();              
+    if (noDropping === false) {
+      nextMoveDown = false;
+      positionY += 1;
+    }
   }
 }
 
@@ -533,7 +621,6 @@ function noDrop() {
       if (y+positionY + 1 < gridHeight -1) {     
         if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
           if (grid[y+positionY+1][x+positionX] !== 0) { 
-            console.log("1");
             return noDropping = true;
           }
         }
@@ -541,3 +628,12 @@ function noDrop() {
     }
   }
 }
+
+function data() {
+  textSize(60);
+  stroke(0);
+  fill(0);
+
+  textAlign(CENTER);
+  text("Score: " + score, 400, 200);
+} 
