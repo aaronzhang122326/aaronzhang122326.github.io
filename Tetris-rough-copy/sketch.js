@@ -40,6 +40,8 @@ let previousRotate;
 let speed = 20;
 
 let noDropping = false;
+let noLeft = false;
+let noRight = false;
 
 let gameStart = false;
 let gameover = false;
@@ -199,9 +201,8 @@ function setup() {
 
 function draw() {
   image(background, 0, 0, width, height);
-  data();
   displayGrid();
-  
+  data();
   if (gameStart === true) {
     moveDown();
     moveBlock();
@@ -298,13 +299,19 @@ function moveDown() {
       }
     
       if (left === true) {
-        if (frameCount % (speed/4) === 0 ) { //unfinished && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0
-          positionX -= 1;
+        if (frameCount % (speed/4) === 0) { //problem
+          sideCheck("left");
+          if (noLeft === false){
+            positionX -= 1;
+          }
         }
       }          
-      else if (right === true) {
-        if (frameCount % (speed/4) === 0 ) { //unfinished && grid[positionY+1][positionX-1] > 0
-          positionX += 1;
+      else if (right === true) {//&& frameCount % speed !== 0
+        if (frameCount % (speed/4) === 0) { //unfinished && grid[positionY+1][positionX-1] > 0
+          sideCheck("right");
+          if (noRight === false) {
+            positionX += 1;
+          }
         }
       }
 
@@ -361,92 +368,6 @@ function moveDown() {
       nextMoveDown = true;
     }
   }
-
-  // if (start === true) {//after block have been spawned    
-    
-  //   if (frameCount % 5 === 0) {      
-  //     if (right === true) {
-  //       if (frameCount % speed === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] > 0) { //unfinished 
-  //         positionX -= 1;
-  //       }
-  //       else {
-  //         a = -1;
-  //       }
-  //     }          
-  //     else if (left === true) {
-  //       if (frameCount % speed === 0 && grid[positionY+1][positionX-1] > 0) { //unfinished 
-  //         positionX += 1;
-  //       }
-  //       else {
-  //         a = 1; 
-  //       }
-  //     }
-  //     else {
-  //       a = 0;
-  //     }
-
-  //     //noDrop();
-  //     if (frameCount % speed === 0 && positionY <= 21-blockList[blockListZ].length && noDropping === false) {
-  //       positionY += 1;
-  //       b = 1;
-  //     }
-
-  //     else {
-  //       b = 0;
-  //     }
-  //     for (let y = blockList[blockListZ].length-1; y >= 0; y--) {
-  //       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-  //         if (grid[y+positionY-b][x+positionX+a] > 0 && blockList[blockListZ][y][x] > 0) {
-  //           grid[y+positionY-b][x+positionX+a] = 0; // possible bug
-  //         }
-
-  //       }
-  //     }      
-  //     if (manualDown === true) {
-  //       dropDown();
-  //     }
-
-  //     if (canRotate && frameCount % 10 === 0 && positionY >= rotateHeight) {
-  //       rotateBlock();        
-  //       //positionY += rotateHeight;
-  //       positionX += rotateWidth; 
-        
-  //       for (let y = blockList[blockListZ].length -1; y >= 0; y--) { //check if block can rotate, problem
-  //         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
-  //           if (grid[y+positionY][x+positionX] !== 0 && blockList[blockListZ][y][x] !== 0){
-  //             positionY -= rotateHeight, positionX -= rotateWidth;
-  //             blockList[blockListZ] = previousRotate;
-  //           }
-  //         }
-  //       }
-  //       rotateSound.play();
-  //       canRotate = false; 
-  //     }
-  //     //where rotate has to happen
-  //     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
-  //       for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
-  //         if (blockList[blockListZ][y][x] > 0){
-  //           grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
-  //         } 
-
-  //         if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
-  //           if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
-  //             if (grid[y+positionY+1][x+positionX] > 0) { 
-  //               start = false;
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }        
-  //     if (start === false) {
-  //       clearBlock();
-  //     }        
-  //     left = false;
-  //     right = false;
-  //     nextMove = true;
-  //     nextMoveDown = true;
-  //   }
-  // }
 
   if (start === true) {//stop the block when touching bottom
     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
@@ -548,15 +469,23 @@ function rotateBlock() { //can shorten later
 
 function mousePressed() {
   gameStart = !gameStart;
+
+  if (gameover) {
+    blockList = [];
+    blockListZ = -1;
+    grid = create2DArray();
+    gameover = false;
+    generateBlock();
+  }
 }
 
 function moveBlock() { //
-  if (keyIsDown(65) && start === true && nextMove === true && frameCount % speed !== 0 && grid[positionY][positionX-1] === 0 && grid[positionY+1][positionX-1] === 0) {
+  if (keyIsDown(65) && start === true && nextMove === true && frameCount % speed !== 0 ) {//&& grid[positionY][positionX-1] === 0 && grid[positionY+1][positionX-1] === 0
     nextMove = false;
     //positionX -= 1;
     left = true;
   }
-  else if (keyIsDown(68) && start === true && nextMove === true && frameCount % speed !== 0 && grid[positionY][positionX+blockList[blockListZ][blockListY].length] === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 0) {
+  else if (keyIsDown(68) && start === true && nextMove === true && frameCount % speed !== 0 ) {//&& grid[positionY][positionX+blockList[blockListZ][blockListY].length] === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 0
     nextMove = false;
     //positionX += 1;
     right = true;
@@ -633,13 +562,41 @@ function noDrop() {
   }
 }
 
+function sideCheck(direction) {
+  if (direction === "left") {
+    for (let y = 0; y < blockList[blockListZ].length; y++) {
+      for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+        if (x === 0 || blockList[blockListZ][y][x-1] === 0) {
+          if (grid[y+positionY][x+positionX-1] !== 0) {
+            return noLeft = true; //possible problem
+          }
+        }
+      }
+    }
+    return noLeft = false;
+  }
+
+  if (direction === "right") {
+    for (let y = 0; y < blockList[blockListZ].length; y++) {
+      for (let x = 0; x < blockList[blockListZ][y].length; x++) {
+        if (x === blockList[blockListZ][y].length-1 || blockList[blockListZ][y][x+1] === 0) {
+          if (grid[y+positionY][x+positionX+1] !== 0) {
+            return noRight = true; //possible problem
+          }
+        }
+      }
+    }
+  }
+  return noRight = false;
+}
+
 function data() {
-  textSize(60);
+  textSize(50);
   stroke(0);
   fill(0);
 
   textAlign(CENTER);
-  text("Score: " + score, 400, 200);
+  text("Score: " + score, width/4, height/8);
 
   if (gameover) {
     textSize(60);
@@ -647,6 +604,6 @@ function data() {
     fill(255);
 
     textAlign(CENTER);
-    text("Game Over", width/2, height/2);
-  }
+    text("Game Over",windowWidth/2, windowHeight/2);
+  } //
 } 
