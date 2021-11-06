@@ -51,7 +51,7 @@ let rotateSound;
 
 let score = 0;
 
-let i, o, z, s, j, l, t;
+let i, o, z, s, j, l, t, background, backgroundGrid;
 
 let iBlocks = [
   [1,1,1,1],
@@ -180,6 +180,9 @@ function preload() {
   l = loadImage('assets/lblocks.png');
   o = loadImage('assets/oblocks.png');
   t = loadImage('assets/tblocks.png');
+
+  background = loadImage('assets/background.jpg');
+  backgroundGrid = loadImage('assets/backgroundGrid.jpg');
 }
 
 function setup() {
@@ -195,7 +198,7 @@ function setup() {
 
 
 function draw() {
-  background(220);
+  image(background, 0, 0, width, height, );
   data();
   displayGrid();
   
@@ -220,9 +223,7 @@ function displayGrid() {
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
       if (grid[y][x] === 0) {
-        stroke("black");
-        fill("white");
-        rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(backgroundGrid, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
       }
 
       else if (grid[y][x] === 1) {
