@@ -6,7 +6,6 @@
 // - describe what you did to take this project "above and beyond"
 
 //Bugs: overlap of blocks
-//      positionY = -1
 //      clear() does not clear all
 //      score and time
 
@@ -43,6 +42,7 @@ let speed = 20;
 let noDropping = false;
 
 let gameStart = false;
+let gameover = false;
 
 let clearSound;
 let lineSound;
@@ -198,7 +198,7 @@ function setup() {
 
 
 function draw() {
-  image(background, 0, 0, width, height, );
+  image(background, 0, 0, width, height);
   data();
   displayGrid();
   
@@ -584,6 +584,7 @@ function clearBlock(){
       }
     }
     if (spaces === 0) {
+      //console.log(grid)
       for (let x = 0; x < gridWidth; x++) {
         grid[y][x] = 0;
       }
@@ -593,6 +594,7 @@ function clearBlock(){
           grid[a][b] = 0;
         }
       }
+      y += 1;
       clearSound.play();
       score += 100;
     } 
@@ -601,6 +603,7 @@ function clearBlock(){
     for (let x = 0; x < gridWidth; x++){
       if (grid[y][x] > 0) {
         gameStart = false;
+        gameover = true;
       }
     }
   }
@@ -637,4 +640,13 @@ function data() {
 
   textAlign(CENTER);
   text("Score: " + score, 400, 200);
+
+  if (gameover) {
+    textSize(60);
+    stroke(255);
+    fill(255);
+
+    textAlign(CENTER);
+    text("Game Over", width/2, height/2);
+  }
 } 
