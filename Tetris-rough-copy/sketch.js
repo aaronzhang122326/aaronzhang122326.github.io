@@ -36,6 +36,7 @@ let noRight = false;
 let start = false;
 let gameStart = false;
 let gameover = false;
+let begin = true;
 
 //sound initialization 
 let clearSound;
@@ -48,7 +49,7 @@ let time = 0;
 let previousTime = 0;
 
 //visual initialization
-let i, o, z, s, j, l, t, backgroundGrid;
+let i, o, z, s, j, l, t, backgroundGrid, bgMusic;
 
 //block lists 
 let iBlocks = [
@@ -175,6 +176,7 @@ function preload() {
   clearSound = loadSound('assets/clear.mp3');
   fallSound = loadSound('assets/fall.mp3');
   rotateSound = loadSound('assets/selection.mp3');
+  bgMusic = loadSound('assets/bgMusic.mp3');
 
   //images
   i = loadImage('assets/iblocks.png');
@@ -191,6 +193,7 @@ function preload() {
 function setup() {
   createCanvas(windowHeight*1.2, windowHeight);
 
+  bgMusic.loop();
   grid = create2DArray();
   gridSide = height/gridHeight;
   blockList = [];
@@ -493,6 +496,11 @@ function rotateBlock() {
 
 //when mouse is clicked
 function mousePressed() {
+  if (begin) {
+    previousTime = round(millis()/1000);
+    begin = false;
+  }
+
   //pause game
   gameStart = !gameStart;
 
@@ -506,6 +514,7 @@ function mousePressed() {
     gameover = false;
     gameStart = true;
     previousTime = round(millis()/1000);
+    bgMusic.play();
     generateBlock();
   }
 }
@@ -654,6 +663,7 @@ function data() {
 
   //gameover text
   if (gameover) {
+    bgMusic.pause();
     textSize(windowHeight*(60/969));
     stroke(255);
     fill(255);
@@ -661,4 +671,13 @@ function data() {
     textAlign(CENTER);
     text("Game Over", width/2, height/2);
   } 
+
+  if (begin) {
+    textSize(windowHeight*(40/969));
+    stroke(255);
+    fill(255);
+
+    textAlign(CENTER);
+    text("Click Mouse to Start", width/2, height/2);
+  }
 } 
