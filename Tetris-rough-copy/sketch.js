@@ -1,60 +1,56 @@
-// First Demo
-// Your Name
-// Date
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// Grid Based Game - Tetris
+// Aaron Su
+// November 6, 2021
 
-//Bugs: overlap of blocks
-//      clear() does not clear all
-//      score and time
-
-let number = 0;
+//background grid variables
 let grid;
-let newGrid;
 let gridHeight = 22;
 let gridWidth = 10;
 let gridSide;
+
+//block list variables
 let blockList;
 let blockListZ = -1;
 let blockListY = 0;
+
+//block variables
 let positionY = 0;
 let positionX;
-let start = false;
+
+//block movement variables
 let left = false;
 let right = false;
 let nextMove = true;
-let newX;
-
 let manualDown = false;
 let nextMoveDown = true;
-
-let a = 0;
-let b = 1;
 let rotateWidth;
 let rotateHeight;
-
 let canRotate = false;
 let previousRotate;
-
 let speed = 20;
-
 let noDropping = false;
 let noLeft = false;
 let noRight = false;
 
+//game over and pause variables
+let start = false;
 let gameStart = false;
 let gameover = false;
 
+//sound initialization 
 let clearSound;
-let lineSound;
 let fallSound;
 let rotateSound;
 
+//game data variables
 let score = 0;
+let time = 0;
+let previousTime = 0;
 
-let i, o, z, s, j, l, t, background, backgroundGrid;
+//visual initialization
+let i, o, z, s, j, l, t, backgroundGrid;
 
+//block lists 
 let iBlocks = [
   [1,1,1,1],
 ];
@@ -159,22 +155,28 @@ let zBlocksTwo = [
   [7,0],
 ];
 
+//list of horizontal shaped blocks
 let blockSetOne = [iBlocks, jBlocks, lBlocks, oBlocks, tBlocks, sBlocks, zBlocks, tBlocksThree, jBlocksThree, lBlocksThree];
+
+//list of vertical shaped blocks
 let blockSetTwo = [iBlocksTwo, sBlocksTwo, zBlocksTwo, tBlocksTwo, tBlocksFour, jBlocksTwo, jBlocksFour, lBlocksTwo, lBlocksFour];
 
-let iBlockSet = [iBlocks, iBlocksTwo];
-let lBlockSet = [lBlocks, lBlocksTwo, lBlocksThree, lBlocksFour];
-let tBlockSet = [tBlocks, tBlocksTwo, tBlocksThree, tBlocksFour];
-let sBlockSet = [sBlocks, sBlocksTwo];
-let zBlockSet = [zBlocks, zBlocksTwo]; 
+//list of block shapes 
+let iBlockSet = [iBlocks, iBlocksTwo]; //i shaped blocks
+let lBlockSet = [lBlocks, lBlocksTwo, lBlocksThree, lBlocksFour]; //l shaped blocks
+let tBlockSet = [tBlocks, tBlocksTwo, tBlocksThree, tBlocksFour]; //t shaped blocks
+let sBlockSet = [sBlocks, sBlocksTwo]; //s shaped blocks
+let zBlockSet = [zBlocks, zBlocksTwo]; //z shaped blocks
 
+//preloading sound and images
 function preload() {
+  //sound
   soundFormats('ogg');
   clearSound = loadSound('assets/clear.mp3');
   fallSound = loadSound('assets/fall.mp3');
   rotateSound = loadSound('assets/selection.mp3');
-  lineSound = loadSound('assets/line.mp3');
 
+  //images
   i = loadImage('assets/iblocks.png');
   s = loadImage('assets/sblocks.png');
   z = loadImage('assets/zblocks.png');
@@ -182,33 +184,33 @@ function preload() {
   l = loadImage('assets/lblocks.png');
   o = loadImage('assets/oblocks.png');
   t = loadImage('assets/tblocks.png');
-
-  background = loadImage('assets/background.jpg');
   backgroundGrid = loadImage('assets/backgroundGrid.jpg');
 }
 
+//set up
 function setup() {
+  createCanvas(windowHeight*1.2, windowHeight);
 
-  createCanvas(windowWidth, windowHeight);
-  
   grid = create2DArray();
   gridSide = height/gridHeight;
-  newGrid = create2DArray();
   blockList = [];
 }
 
-
-
 function draw() {
-  image(background, 0, 0, width, height);
+  //display background and data
+  background(137, 207, 240);
   displayGrid();
   data();
+
+  //when game started
   if (gameStart === true) {
+    time = round(millis()/1000) - previousTime;
     moveDown();
     moveBlock();
-    //console.log(noDropping);
   }
 }
+
+//creates 2 dimensional array
 function create2DArray() {
   let screen = [];
   for (let y = 0; y < gridHeight; y++) {
@@ -220,46 +222,46 @@ function create2DArray() {
   return screen;
 }
 
+//displays images of blocks
 function displayGrid() {
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
       if (grid[y][x] === 0) {
-        image(backgroundGrid, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(backgroundGrid, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays background blocks
       }
 
       else if (grid[y][x] === 1) {
-        image(i, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(i, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays i shaped blocks
       }
 
       else if (grid[y][x] === 2) {
-        image(j, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(j, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays j shaped blocks
       }
 
       else if (grid[y][x] === 3) {
-        image(l, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(l, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays l shaped blocks
       }
       
       else if (grid[y][x] === 4) {
-        image(o, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(o, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays o shaped blocks
       }
 
       else if (grid[y][x] === 5) {
-        image(t, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(t, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays t shaped blocks
       }
 
       else if (grid[y][x] === 6) {
-        image(s, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(s, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays s shaped blocks
       }
 
       else if (grid[y][x] === 7) {
-        image(z, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
+        image(z, x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide); //displays z shaped blocks
       }
-
-      // rect(x * gridSide + (width/2 - gridWidth/2 * gridSide), y * gridSide, gridSide, gridSide);
     }
   }
 }
 
+//sanity check before rotating
 function findRotateData() {
   for (let x = 0; x < blockSetTwo.length; x++){
     if (blockList[blockListZ] === blockSetTwo[x]){
@@ -274,6 +276,7 @@ function findRotateData() {
   }
 }
 
+//spawns blocks 
 function generateBlock() {
   blockList.push(random(blockSetOne));
   blockListZ += 1;
@@ -287,27 +290,34 @@ function generateBlock() {
 }
 
 function moveDown() {
-  if (start === true) {//after block have been spawned    
-    
+  //after block have been spawned  
+  if (start === true) {  
+
+    //movement of blocks
     if (frameCount % 5 === 0) {      
+      //erases the block
       for (let y = blockList[blockListZ].length-1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {
           if (grid[y+positionY][x+positionX] > 0 && blockList[blockListZ][y][x] > 0) {
-            grid[y+positionY][x+positionX] = 0; // possible bug      
+            grid[y+positionY][x+positionX] = 0;  
           }
         }
       }
     
+    //changes position of block
+      //moving block left
       if (left === true) {
-        if (frameCount % (speed/4) === 0) { //problem
+        if (frameCount % (speed/4) === 0) {
           sideCheck("left");
           if (noLeft === false){
             positionX -= 1;
           }
         }
       }          
-      else if (right === true) {//&& frameCount % speed !== 0
-        if (frameCount % (speed/4) === 0) { //unfinished && grid[positionY+1][positionX-1] > 0
+
+      //moving block right
+      else if (right === true) {
+        if (frameCount % (speed/4) === 0) { 
           sideCheck("right");
           if (noRight === false) {
             positionX += 1;
@@ -315,13 +325,12 @@ function moveDown() {
         }
       }
 
-
-
-   
+      //sanity checks when moving down
       if (manualDown === true) {
         dropDown();
       }
 
+      //rotate block
       if (canRotate && frameCount % 10 === 0 && positionY >= rotateHeight) {
         rotateBlock();        
         positionY += rotateHeight;
@@ -338,18 +347,24 @@ function moveDown() {
         rotateSound.play();
         canRotate = false; 
       }
+
+      //sanity check when moving down
       noDrop();
+      
+      //moving down
       if (frameCount % speed === 0 && positionY <= 21-blockList[blockListZ].length && noDropping === false) {
         positionY += 1;
       }
 
+      //draws the block
       for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
         for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
           if (blockList[blockListZ][y][x] > 0){
             grid[y+positionY][x+positionX] = blockList[blockListZ][y][x];
           } 
-
-          if (y+positionY + 1 < gridHeight ) {// stoping the block && positionY > 1         
+          
+          //stops the block from moving when landing on another block
+          if (y+positionY + 1 < gridHeight ) { 
             if (blockList[blockListZ][y][x] > 0 && (y === blockList[blockListZ].length-1 || blockList[blockListZ][y+1][x] === 0)) {
               if (grid[y+positionY+1][x+positionX] > 0) { 
                 start = false;
@@ -357,11 +372,12 @@ function moveDown() {
             }
           }
         }
-      }        
+      }       
       if (start === false) {
         fallSound.play();
         clearBlock();
-      }        
+      } 
+      //resets restrictive variables       
       left = false;
       right = false;
       nextMove = true;
@@ -369,7 +385,8 @@ function moveDown() {
     }
   }
 
-  if (start === true) {//stop the block when touching bottom
+  //stops the block when touching bottom
+  if (start === true) {
     for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {              
         if (positionY + blockList[blockListZ].length === gridHeight) {
@@ -380,23 +397,26 @@ function moveDown() {
       }
     }
   }
+  //spawns new block
   if (start === false) {
     generateBlock();
   }
 }
 
-function rotateBlock() { //can shorten later
-  if (blockList[blockListZ] === zBlocks && canRotate) { //zblocks rotation
+//block rotation variables
+function rotateBlock() {
+  //zblocks rotation
+  if (blockList[blockListZ] === zBlocks && canRotate) { 
     blockList[blockListZ] = zBlocksTwo;
     previousRotate = zBlocks;
-
   }
   else if (blockList[blockListZ] === zBlocksTwo && canRotate) {
     blockList[blockListZ] = zBlocks;
     previousRotate = zBlocksTwo;
   }
 
-  else if (blockList[blockListZ] === sBlocks && canRotate) { //sblocks rotation
+  //sblocks rotation
+  else if (blockList[blockListZ] === sBlocks && canRotate) { 
     blockList[blockListZ] = sBlocksTwo;
     previousRotate = sBlocks;
   }
@@ -405,7 +425,8 @@ function rotateBlock() { //can shorten later
     previousRotate = sBlocksTwo;
   }
 
-  else if (blockList[blockListZ] === iBlocks && canRotate) {//iblocks rotation
+  //iblocks rotation
+  else if (blockList[blockListZ] === iBlocks && canRotate) {
     blockList[blockListZ] = iBlocksTwo;
     previousRotate = iBlocks;
   }
@@ -414,7 +435,8 @@ function rotateBlock() { //can shorten later
     previousRotate = iBlocksTwo;
   }    
 
-  else if (blockList[blockListZ] === tBlocks && canRotate) { //tblocks rotation
+  //tblocks rotation
+  else if (blockList[blockListZ] === tBlocks && canRotate) { 
     blockList[blockListZ] = tBlocksTwo;
     previousRotate = tBlocks;
   }
@@ -431,7 +453,8 @@ function rotateBlock() { //can shorten later
     previousRotate = tBlocksThree;
   }    
 
-  else if (blockList[blockListZ] === jBlocks && canRotate) { //jblocks rotation
+  //jblocks rotation
+  else if (blockList[blockListZ] === jBlocks && canRotate) { 
     blockList[blockListZ] = jBlocksTwo;
     previousRotate = jBlocks;
   }
@@ -448,7 +471,8 @@ function rotateBlock() { //can shorten later
     previousRotate = jBlocksFour;
   }    
 
-  else if (blockList[blockListZ] === lBlocks && canRotate) { //lblocks rotation
+  //lblocks rotation
+  else if (blockList[blockListZ] === lBlocks && canRotate) { 
     blockList[blockListZ] = lBlocksTwo;
     previousRotate = lBlocks;
   }
@@ -467,31 +491,41 @@ function rotateBlock() { //can shorten later
   findRotateData();
 }
 
+//when mouse is clicked
 function mousePressed() {
+  //pause game
   gameStart = !gameStart;
 
+  //restart game 
   if (gameover) {
+    //reset variables 
     blockList = [];
     blockListZ = -1;
     score = 0;
     grid = create2DArray();
     gameover = false;
+    gameStart = true;
+    previousTime = round(millis()/1000);
     generateBlock();
   }
 }
 
-function moveBlock() { //
-  if (keyIsDown(65) && start === true && nextMove === true && frameCount % speed !== 0 ) {//&& grid[positionY][positionX-1] === 0 && grid[positionY+1][positionX-1] === 0
+//when keyboard is pressed
+function moveBlock() {
+  //when "Left Arrow" or "a" is pressed 
+  if ((keyIsDown(65) || keyIsDown(LEFT_ARROW)) && start === true && nextMove === true && frameCount % speed !== 0 ) {
     nextMove = false;
-    //positionX -= 1;
     left = true;
   }
-  else if (keyIsDown(68) && start === true && nextMove === true && frameCount % speed !== 0 ) {//&& grid[positionY][positionX+blockList[blockListZ][blockListY].length] === 0 && grid[positionY+1][positionX+blockList[blockListZ][blockListY].length] === 0
+
+  //when "Right Arrow" or "d" is pressed 
+  else if ((keyIsDown(68) || keyIsDown(RIGHT_ARROW)) && start === true && nextMove === true && frameCount % speed !== 0 ) {
     nextMove = false;
-    //positionX += 1;
     right = true;
   }
-  if (keyIsDown(83) && start === true) {
+
+  //when "Down Arrow" or "s" is pressed 
+  if (keyIsDown(83) || keyIsDown(DOWN_ARROW) && start === true) {
     manualDown = true;
   }
   else {
@@ -499,12 +533,14 @@ function moveBlock() { //
   }
 }
 
+//when "Up Arrow" or "w" is pressed 
 function keyPressed() {
-  if (keyCode === 87) {
+  if (keyCode === 87 || keyCode === UP_ARROW) {
     canRotate = true;
   }
 }
 
+//check if there are full rows to clear
 function clearBlock(){
   for (let y = gridHeight -1; y >= 0; y--) {
     let spaces = 0;
@@ -513,11 +549,12 @@ function clearBlock(){
         spaces += 1;
       }
     }
+    //erase row
     if (spaces === 0) {
-      //console.log(grid)
       for (let x = 0; x < gridWidth; x++) {
         grid[y][x] = 0;
       }
+      //bring everything above down
       for (let a = y-1; a >= 0 ; a--) {
         for (let b = 0; b < gridWidth; b++) {
           grid[a+1][b] = grid[a][b];
@@ -529,9 +566,12 @@ function clearBlock(){
       score += 100;
     } 
   }
+  
+  //if blocks top the screen
   for (let y = 0; y < 2; y++){
     for (let x = 0; x < gridWidth; x++){
       if (grid[y][x] > 0) {
+        //game over
         gameStart = false;
         gameover = true;
       }
@@ -539,6 +579,7 @@ function clearBlock(){
   }
 }
 
+//move block down manually
 function dropDown() {
   if (nextMoveDown === true && positionY < 21-blockList[blockListZ].length) { //Problem
     noDrop();              
@@ -549,6 +590,7 @@ function dropDown() {
   }
 }
 
+//sanity check when moving block down
 function noDrop() {
   for (let y = blockList[blockListZ].length -1; y >= 0; y--) {
     for (let x = 0; x < blockList[blockListZ][y].length; x++) {    
@@ -563,13 +605,14 @@ function noDrop() {
   }
 }
 
+//sanity check when moving block horizontally 
 function sideCheck(direction) {
   if (direction === "left") {
     for (let y = 0; y < blockList[blockListZ].length; y++) {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
         if (x === 0 || blockList[blockListZ][y][x-1] === 0) {
           if (grid[y+positionY][x+positionX-1] !== 0) {
-            return noLeft = true; //possible problem
+            return noLeft = true; 
           }
         }
       }
@@ -582,7 +625,7 @@ function sideCheck(direction) {
       for (let x = 0; x < blockList[blockListZ][y].length; x++) {
         if (x === blockList[blockListZ][y].length-1 || blockList[blockListZ][y][x+1] === 0) {
           if (grid[y+positionY][x+positionX+1] !== 0) {
-            return noRight = true; //possible problem
+            return noRight = true; 
           }
         }
       }
@@ -591,20 +634,31 @@ function sideCheck(direction) {
   return noRight = false;
 }
 
+//data text
 function data() {
-  textSize(50);
-  stroke(0);
-  fill(0);
+  //score text 
+  textSize(windowHeight*(50/969));
+  stroke(255);
+  fill(255);
 
   textAlign(CENTER);
-  text("Score: " + score, width/4, height/8);
+  text("Score: " + score, width/8, height/8);
 
+  //time text
+  textSize(windowHeight*(50/969));
+  stroke(255);
+  fill(255);
+
+  textAlign(CENTER);
+  text("Time: " + time, width/8, height/5.5);
+
+  //gameover text
   if (gameover) {
-    textSize(60);
+    textSize(windowHeight*(60/969));
     stroke(255);
     fill(255);
 
     textAlign(CENTER);
-    text("Game Over",windowWidth/2, windowHeight/2);
-  } //
+    text("Game Over", width/2, height/2);
+  } 
 } 
