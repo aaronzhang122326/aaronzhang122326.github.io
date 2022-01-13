@@ -172,7 +172,7 @@ let zBlockSet = [zBlocks, zBlocksTwo]; //z shaped blocks
 //preloading sound and images
 function preload() {
   //sound
-  soundFormats('ogg');
+
   clearSound = loadSound('assets/clear.mp3');
   fallSound = loadSound('assets/fall.mp3');
   rotateSound = loadSound('assets/selection.mp3');
