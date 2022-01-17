@@ -42,9 +42,8 @@ function mousePressed(){
     console.log("-" + round(random(0, 10)) + " + " + round(random(10, 20)) + " =");
   }
   else if ((round(random(1,8)) === 8)){
-    console.log(round(random(0, 10)) + " - " + round(random(0, 20)) +  "=");
+    console.log(round(random(0, 10)) + " - " + round(random(0, 20)) +  " =");
   }
 
-  //console.log(round(random(0, 20)) + "   " + round(random(0, 20)));
 }
   
