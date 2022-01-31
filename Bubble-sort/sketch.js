@@ -1,41 +1,37 @@
-// First Demo
-// Your Name
-// Date
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// Bubble Sort
+
 let someList = [5,15,3,8,9,1,20,7];
 
-function bubbleSort(aList) {
-  let anySwaps = true;
-  while (anySwaps){
-    anySwaps = false;
-    for (let i = 0; i < aList.length-1; i++){
-      if (aList[i] > aList[i+1]) {
-        anySwaps = true;
-        let temp = aList[i];
-        aList[i] = aList[i+1];
-        aList[i+1] = temp;
+function selectionSort(aList) {
+  let swapLocation = aList.length - 1;
+  
+  while (swapLocation > 0) {
+    let highestLocation = 0;
+
+    //one pass
+    for (let current = 0; current <= swapLocation; current++) {
+      if (aList[current] > aList[highestLocation]) {
+        highestLocation = current;
       }
     }
+    //swap
+    let temp = aList[swapLocation];
+    aList[swapLocation] = aList[highestLocation];
+    aList[highestLocation] = temp;
+
+    //decrease the swap location by 1
+    swapLocation--;
+
+    //to show each pass...
+    console.log(aList);
   }
+
   return aList;
-
-
-  
-  // let position = 0;
-  // //one pass
-  // for (let i = 0; i <aList.length-1; i++) {
-  //   //check for swap
-  //   let temp = aList[i];
-  //   aList[i] = aList[i+1];
-  //   aList[i+1] = temp;
-  // } 
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  console.log(bubbleSort(someList));
+  console.log(selectionSort(someList));
 }
 
 function draw() {

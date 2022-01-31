@@ -6,13 +6,29 @@ function draw() {
   
 }
 function mousePressed(){
-  //console.log(round(random(0, 20)) + " - " + "(-" + round(random(0, 20)) + ") =");
-  // if ((round(random(1,2)) === 1)){
-  //   console.log("-"  + round(random(0, 10)) + " + " + round(random(10, 20)) + " =");
+  //multiplication
+  // if ((round(random(1,3)) === 1)){
+  //   console.log(round(random(-10, 0)) + " x (" + round(random(-10, 0)) + ") =");
+  // }
+  // else if ((round(random(1,3)) === 2)){
+  //   console.log(round(random(-10, 0)) + " x " + round(random(0, 10)) + " =");
   // }
   // else {
-  //   console.log(round(random(0, 10)) + " - " + round(random(10, 20)) + " =");
+  //   console.log(round(random(0, 10)) + " x (" + round(random(-10, 0)) + ") =");
   // }
+
+
+  //division
+  // if ((round(random(1,3)) === 1)){
+  //   console.log(round(random(-81, 0)) + " x (" + round(random(-10, 0)) + ") =");
+  // }
+  // if ((round(random(1,2)) === 2)){
+  //   console.log(round(random(-81, 0)) + " x " + round(random(0, 10)) + " =");
+  // }
+  // else {
+  //   console.log(round(random(0, 81)) + " x (" + round(random(0, 10)) + ") =");
+  // }
+
 
   if ((round(random(1,8)) === 1)){
     console.log("-"  + round(random(10, 20)) + " + " + round(random(0, 10)) + " =");
