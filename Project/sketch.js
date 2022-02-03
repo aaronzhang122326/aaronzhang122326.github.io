@@ -29,6 +29,7 @@ function keyPressed(){
   if (keyIsPressed){
     if (keyCode === 87){
       slidingUp = true;
+      collideUp();
     }
     else if (keyCode === 83){
       slidingDown = true;
@@ -61,6 +62,10 @@ function display2DArray(){
       else if (grid[y][x] !== 0) {
         fill("red");
         rect(x*cellSize, y*cellSize, cellSize, cellSize);
+        fill("black");
+        textSize(50);
+        textAlign(CENTER);
+        text(grid[y][x], x*cellSize+cellSize/2, y*cellSize+cellSize/2);
       }
     }
   }
@@ -120,13 +125,36 @@ function spawnBlock(){
   }
   let loc = round(random(0, yList.length-1));
   grid[yList[loc]][xList[loc]] = 2;
-  console.log(loc);
+  //console.log(loc);
 }
 
-function collide(){
-  for (let y = 0; y < grid.length; y++){
+function collideUp(){
+  for (let y = 1; y < grid.length; y++){
     for (let x = 0; x < grid[y].length; x++){
-      
+      if (grid[y][x] === grid[y-1][x]){
+        let temp = grid[y][x];
+        grid[y][x] = 0;
+        grid[y-1][x] = grid[y-1][x] + temp;
+      }
     }
+  }
+  for (let y = 1; y < grid.length; y++){
+    for (let x = 0; x < grid[y].length; x++){
+      moveUp(y, x, y, x);
+    }
+  }
+}
+
+function moveUp(col, row, oriY, oriX){
+  if (col > 0){
+    if (grid[col-1][row] === 0){
+      return moveUp(col-1, row, oriY, oriX);
+    }
+  }
+  else {
+    if (col !== oriY){
+      return grid[col][row] = grid[oriY][oriX], grid[oriY][oriX] = 0;
+    }
+    return grid[col][row] = grid[oriY][oriX];
   }
 }
